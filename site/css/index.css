@@ -1,0 +1,12 @@
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+.display-table {
+  display : table;
+}
+
+.top-buffer { margin-top:20px; }
