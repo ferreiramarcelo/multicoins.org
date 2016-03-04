@@ -94,6 +94,19 @@ exports.RefreshEncodeWalletTab = function()
     }
 };
 
+exports.UpdateBalanceTable = function()
+{
+    $( "#tab_tab_balance" ).html('');
+    for (var key in utils.coinsInfo)
+    {
+        const tdCoin = $('<td>' + utils.coinsInfo[key][0]+"</td>");
+        const tdBalance = $('<td>' + utils.getSavedBalance(key)+"</td>");
+
+        $( "#tab_tab_balance" ).append($("<tr></tr>").append(
+            tdCoin, tdBalance ));
+    }
+};
+
 exports.UpdateKeyPairsTableHTML = function()
 {
     var jsonSavedKeyPairs = utils.getItem("KeyPairs").value || {}; 
@@ -106,25 +119,32 @@ exports.UpdateKeyPairsTableHTML = function()
             continue;
             
         const address = jsonSavedKeyPairs[key].address;
-        
+        const privkey = jsonSavedKeyPairs[key].private_key;
+         
         //console.log('key='+key+'; address='+address);
         //console.log('jsonSavedKeyPairs[key].network='+jsonSavedKeyPairs[key].network);
         
-        const tdCoin = $('<td class="col-md-1">' + utils.coinsInfo[jsonSavedKeyPairs[key].network][0]+"</td>");
-        const tdPublic = $('<td class="col-md-4">'+address+"</td>");
-        const tdBalance = $('<td class="col-md-1">'+jsonSavedKeyPairs[key].balance +"</td>");
-        const tdPrivate = $('<td class="col-md-6">'+jsonSavedKeyPairs[key].private_key+"</td>");
+        const tdCoin = $('<td>' + utils.coinsInfo[jsonSavedKeyPairs[key].network][0]+"</td>");
+        const tdPublic = $('<td>'+address+"</td>");
+        const tdBalance = $('<td>'+jsonSavedKeyPairs[key].balance +"</td>");
+        const tdPrivate = $('<td><a href="#">'+jsonSavedKeyPairs[key].private_key+"</a></td>");
+        
+        tdPrivate[0].onclick = function() {
+            alert(privkey);
+        };
  
         var btnClose = $('<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>');
         btnClose[0].onclick = function(){
             utils.deleteKey("KeyPairs", address);
             exports.UpdateKeyPairsTableHTML();
         };
-        const tdDelete = $("<td class='col-md-1'></td>").append(btnClose);
+        const tdDelete = $("<td></td>").append(btnClose);
         
         $( "#keypairs" ).append($("<tr></tr>").append(
             tdCoin, tdPublic, tdBalance, tdPrivate, tdDelete ));
     }
+    
+    exports.UpdateBalanceTable();
 };
 
 exports.UpdatePublicKeysTableHTML = function()
@@ -144,23 +164,23 @@ exports.UpdatePublicKeysTableHTML = function()
         //console.log('jsonSavedPublicKeys[key]='+JSON.stringify(jsonSavedPublicKeys[key]));
         //console.log('jsonSavedPublicKeys[key].network='+JSON.stringify(network));
         
-        const tdCoin = $('<td class="col-md-1">' + utils.coinsInfo[network][0]+"</td>");
-        const tdPublic = $("<td class='col-md-5'>"+address+"</td>");
-        const tdLabel = $("<td class='col-md-6'>"+strLabel +"</td>");
+        const tdCoin = $('<td >' + utils.coinsInfo[network][0]+"</td>");
+        const tdPublic = $("<td >"+address+"</td>");
+        const tdLabel = $("<td >"+strLabel +"</td>");
         
         var btnSend = $('<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-send" aria-hidden="true"></span></button>');
          btnSend[0].onclick = function(){
              require('./sendTransaction').onOpenDialog(network, address, strLabel, strCoinShortName);
         };
         
-        const tdSend= $("<td class='col-md-1'></td>").append(btnSend);
+        const tdSend= $("<td ></td>").append(btnSend);
 
         var btnClose = $('<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>');
         btnClose[0].onclick = function(){
             utils.deleteKey("PublicKeys", address);
             exports.UpdatePublicKeysTableHTML();
         };
-        const tdDelete = $("<td class='col-md-1'></td>").append(btnClose);
+        const tdDelete = $("<td ></td>").append(btnClose);
         
         $( "#addresses_to_send" ).append($("<tr></tr>").append(
             tdCoin, tdPublic, tdLabel, tdSend, tdDelete ));

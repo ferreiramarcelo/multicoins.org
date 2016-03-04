@@ -9,7 +9,7 @@ const alerts = require('./alerts');
 exports.coinsInfo = {
         0x00 : ['bitcoin', "https://btc.blockr.io/api/v1/address/", "?confirmations=0", "BTC", "https://btc.blockr.io/api/v1/tx/push"],
         0x30 : ['litecoin', "https://ltc.blockr.io/api/v1/address/", "?confirmations=0", "LTC", "https://ltc.blockr.io/api/v1/tx/push"],
-        0x1e : ['dogecoin', "https://dogechain.info/api/v1/address/", "?confirmations=0", "DOGE", "https://btc.blockr.io/api/v1/tx/push"],
+//        0x1e : ['dogecoin', "https://dogechain.info/api/v1/address/", "?confirmations=0", "DOGE", "https://btc.blockr.io/api/v1/tx/push"],
         0x6f : ['testnet', "https://tbtc.blockr.io/api/v1/address/", "?confirmations=0", "TBTC", "https://tbtc.blockr.io/api/v1/tx/push"]
     };
 
@@ -186,7 +186,9 @@ exports.updateTransactions = function(callback)
         return;
     }
     
-    var coins = {0x00 : [], 0x30 : [], 0x1e : [], 0x6f : []};
+    var coins = {}; //{0x00 : [], 0x30 : [], 0x1e : [], 0x6f : []};
+    for (var key in exports.coinsInfo)
+        coins[key] = [];
 
     for (var key in jsonSavedKeyPairs)
         coins[jsonSavedKeyPairs[key].network].push(jsonSavedKeyPairs[key].address);
