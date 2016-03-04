@@ -3,6 +3,7 @@
 const crypto = require('crypto');
 const utils = require('./utils.js');
 const $ = require('jquery');
+const alerts = require('./alerts');
 
 
 exports.EncodeWallet = function(password)
@@ -130,7 +131,10 @@ exports.UpdateKeyPairsTableHTML = function()
         const tdPrivate = $('<td><a href="#">'+jsonSavedKeyPairs[key].private_key+"</a></td>");
         
         tdPrivate[0].onclick = function() {
-            alert(privkey);
+            if (utils.getSavedEncodePassword())
+                alerts.Alert("Your encoded private key", privkey);
+            else
+                alerts.Alert("Your private key", privkey);
         };
  
         var btnClose = $('<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>');

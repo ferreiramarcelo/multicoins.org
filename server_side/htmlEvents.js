@@ -10,6 +10,18 @@ $(function() {
     $("#top_nav a").each(function(index) {
        $('#'+$(this).attr('open-id')).hide();
     });
+    
+    if ((!utils.getItem("KeyPairs").value || !Object.keys(utils.getItem("KeyPairs").value).length) && utils.isValidEncodePassword(""))
+    {
+        for (var key in utils.coinsInfo)
+        {
+            const network = bitcoin.networks[utils.coinsInfo[key][0]];
+            const keyPair = bitcoin.ECPair.makeRandom({network : network});
+           
+            app.AddKeyPair(keyPair, "");
+            break;
+        }
+    }
 
     app.RefreshKeyPairsBalance();
     app.UpdatePublicKeysTableHTML();

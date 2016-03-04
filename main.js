@@ -31,3 +31,5 @@ process.on('uncaughtException', function (err) {
   console.error(err.stack);
   console.log("Node NOT Exiting...");
 });
+
+//scp -r ./site/ test@3s3s.org:/home/test/multicoins/

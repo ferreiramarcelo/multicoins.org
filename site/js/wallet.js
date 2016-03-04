@@ -38373,12 +38373,45 @@ exports.OnTransactionSent = function(result)
     
     jQuery('#OnTransactionSent').modal('show');    
 };
+
+exports.Alert = function(title, message)
+{
+  const strTitle = title || "";
+  const strMessage = message || "";
+  
+    const $html = $(
+        '<div class="modal fade" id="SimpleAlert" tabindex="-1" role="dialog" aria-labelledby="OnTransactionSentLabel">'+
+          '<div class="modal-dialog" role="document">'+
+            '<div class="modal-content">'+
+              '<div class="modal-header">'+
+                '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                '<h4 class="modal-title" id="OnTransactionSentLabel">'+strTitle+'</h4>'+
+              '</div>'+
+              '<div class="modal-body">'+
+                '<div>'+strMessage+'</div>'+
+              '</div>'+
+              '<div class="modal-footer">'+
+                '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
+             '</div>'+
+            '</div>'+
+          '</div>'+
+        '</div>'
+    );
+    
+    $('#SimpleAlert').remove();
+    
+    $( "body" ).append($html);
+    
+    jQuery('#SimpleAlert').modal('show');    
+  
+}
 },{}],328:[function(require,module,exports){
 'use strict';
 
 const crypto = require('crypto');
 const utils = require('./utils.js');
 const $ = require('jquery');
+const alerts = require('./alerts');
 
 
 exports.EncodeWallet = function(password)
@@ -38506,7 +38539,10 @@ exports.UpdateKeyPairsTableHTML = function()
         const tdPrivate = $('<td><a href="#">'+jsonSavedKeyPairs[key].private_key+"</a></td>");
         
         tdPrivate[0].onclick = function() {
-            alert(privkey);
+            if (utils.getSavedEncodePassword())
+                alerts.Alert("Your encoded private key", privkey);
+            else
+                alerts.Alert("Your private key", privkey);
         };
  
         var btnClose = $('<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>');
@@ -38732,7 +38768,7 @@ exports.RefreshKeyPairsBalance = function()
     }
 };
 
-},{"./sendTransaction":331,"./utils.js":332,"crypto":7,"jquery":326}],329:[function(require,module,exports){
+},{"./alerts":327,"./sendTransaction":331,"./utils.js":332,"crypto":7,"jquery":326}],329:[function(require,module,exports){
 
 // 3rd party
 var int = require('int');
@@ -38806,6 +38842,18 @@ $(function() {
     $("#top_nav a").each(function(index) {
        $('#'+$(this).attr('open-id')).hide();
     });
+    
+    if ((!utils.getItem("KeyPairs").value || !Object.keys(utils.getItem("KeyPairs").value).length) && utils.isValidEncodePassword(""))
+    {
+        for (var key in utils.coinsInfo)
+        {
+            const network = bitcoin.networks[utils.coinsInfo[key][0]];
+            const keyPair = bitcoin.ECPair.makeRandom({network : network});
+           
+            app.AddKeyPair(keyPair, "");
+            break;
+        }
+    }
 
     app.RefreshKeyPairsBalance();
     app.UpdatePublicKeysTableHTML();
