@@ -5,16 +5,17 @@ const Bip38 = require('bip38');
 const base58 = require('./base58');
 const bitcoin = require('bitcoinjs-lib');
 const alerts = require('./alerts');
+const $ = require('jquery');
 
 exports.coinsInfo = {
         0x00 : ['bitcoin', "https://btc.blockr.io/api/v1/address/", "?confirmations=0", "BTC", "https://btc.blockr.io/api/v1/tx/push"],
         0x30 : ['litecoin', "https://ltc.blockr.io/api/v1/address/", "?confirmations=0", "LTC", "https://ltc.blockr.io/api/v1/tx/push"],
-//        0x1e : ['dogecoin', "https://dogechain.info/api/v1/address/", "?confirmations=0", "DOGE", "https://btc.blockr.io/api/v1/tx/push"],
+       // 0x1e : ['dogecoin', "https://dogechain.info/api/v1/", "?confirmations=0", "DOGE", "https://btc.blockr.io/api/v1/tx/push"],
         0x6f : ['testnet', "https://tbtc.blockr.io/api/v1/address/", "?confirmations=0", "TBTC", "https://tbtc.blockr.io/api/v1/tx/push"]
     };
 
 exports.scryptParams = {
-          N: 8, 
+          N: 32, 
           r: 8, 
           p: 8
         };
@@ -235,6 +236,10 @@ exports.updateTransactions = function(callback)
 
 exports.getBalance = function(netID, arrayAddr, callback)
 {
+   // var url = exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2];
+   // if (netID == 0x1e) //DOGE
+   //     exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2];
+   // 
     console.log('get balance ' + exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2]);
     
     $.getJSON( exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2], function(data) {
@@ -336,4 +341,20 @@ exports.deleteKey = function(parent, key)
 exports.JSONreturn = function(success, message)
 {
     return {status: success, message: message};
+};
+
+exports.HideSpinner = function()
+{
+    var $preloader = $('#page-preloader'),
+        $spinner   = $preloader.find('.spinner');
+    $spinner.fadeOut();
+    $preloader.delay(350).fadeOut('slow');
+};
+
+exports.ShowSpinner = function()
+{
+    var $preloader = $('#page-preloader'),
+        $spinner   = $preloader.find('.spinner');
+    $spinner.show();
+    $preloader.show();
 };

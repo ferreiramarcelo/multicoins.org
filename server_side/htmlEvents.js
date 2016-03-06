@@ -5,8 +5,11 @@ const bitcoin = require('bitcoinjs-lib');
 const utils = require('./utils.js');    
 const Firebase = require("firebase");
 const crypto = require('crypto');
+const alerts = require('./alerts');
 
 $(function() {
+    utils.HideSpinner();
+    
     $("#top_nav a").each(function(index) {
        $('#'+$(this).attr('open-id')).hide();
     });
@@ -71,6 +74,8 @@ $('#submitEncryptWallet').click(function(e){
         return;
     }
     
+    //utils.ShowSpinner();
+    
     if (!savedPassword)
     {
         if (app.EncodeWallet(password))
@@ -85,7 +90,8 @@ $('#submitEncryptWallet').click(function(e){
         else
             alert('Decode error!');
     }
-
+   // utils.HideSpinner();
+    
     app.UpdateKeyPairsTableHTML();
     app.RefreshEncodeWalletTab();
 });
@@ -149,6 +155,8 @@ $('#submitBackup').click(function(e){
     for (var key in jsonSavedKeyPairs)
         jsonSavedKeyPairs[key].txs = [];
 
+    utils.ShowSpinner();
+    
     db.ref.set({
 	  uid: db.uid,
 	  keypairs: jsonSavedKeyPairs,
@@ -156,10 +164,11 @@ $('#submitBackup').click(function(e){
 	  security: utils.getItem("Security").value || {}
     }, function(error) {
         if (error) {
-            alert("Data could not be saved." + error);
+            alerts.Alert("Error !", "Data could not be saved." + error);
         } else {
-            alert("Data saved successfully.");
-        }        
+            alerts.Alert("Success !", "Data saved successfully.");
+        }  
+        utils.HideSpinner();
     });
 });
 
@@ -168,6 +177,8 @@ $('#submitRestore').click(function(e){
     
     const db= onBackupOrRestore();
     if (!db) return;
+    
+    utils.ShowSpinner();
 
     db.ref.once("value", function(snapshot) {
         utils.setItem("KeyPairs", snapshot.val().keypairs);
@@ -178,9 +189,13 @@ $('#submitRestore').click(function(e){
         app.UpdatePublicKeysTableHTML();
         app.RefreshEncodeWalletTab();
         
-        alert("Data restored successfully.");
+        alerts.Alert("Success !", "Data restored successfully.");
+        
+        utils.HideSpinner();
     }, function (errorObject) {
-        alert("The read failed: " + errorObject.code);
+        alerts.Alert("Error !", "The read failed: " + errorObject.code);
+        
+        utils.HideSpinner();
     });
     
 });

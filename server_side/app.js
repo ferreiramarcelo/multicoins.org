@@ -19,12 +19,13 @@ exports.EncodeWallet = function(password)
     
     for (var key in jsonSavedKeyPairs)
     {
-        const address = jsonSavedKeyPairs[key].address;
-        const private_key = jsonSavedKeyPairs[key].private_key;
+        const keyCurrent = key;
+        const address = jsonSavedKeyPairs[keyCurrent].address;
+        const private_key = jsonSavedKeyPairs[keyCurrent].private_key;
+            
+        const bip38 = utils.getBIP38(jsonSavedKeyPairs[keyCurrent].network);
         
-        const bip38 = utils.getBIP38(jsonSavedKeyPairs[key].network);
-        
-        jsonSavedKeyPairs[key].private_key = bip38.encrypt(private_key, hash1, address, function(status){console.log(status.percent)});
+        jsonSavedKeyPairs[keyCurrent].private_key = bip38.encrypt(private_key, hash1, address, function(status){console.log(status.percent)});
     }
     
     utils.setItem("KeyPairs", jsonSavedKeyPairs);

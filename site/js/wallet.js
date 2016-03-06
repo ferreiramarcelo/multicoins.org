@@ -38427,12 +38427,13 @@ exports.EncodeWallet = function(password)
     
     for (var key in jsonSavedKeyPairs)
     {
-        const address = jsonSavedKeyPairs[key].address;
-        const private_key = jsonSavedKeyPairs[key].private_key;
+        const keyCurrent = key;
+        const address = jsonSavedKeyPairs[keyCurrent].address;
+        const private_key = jsonSavedKeyPairs[keyCurrent].private_key;
+            
+        const bip38 = utils.getBIP38(jsonSavedKeyPairs[keyCurrent].network);
         
-        const bip38 = utils.getBIP38(jsonSavedKeyPairs[key].network);
-        
-        jsonSavedKeyPairs[key].private_key = bip38.encrypt(private_key, hash1, address, function(status){console.log(status.percent)});
+        jsonSavedKeyPairs[keyCurrent].private_key = bip38.encrypt(private_key, hash1, address, function(status){console.log(status.percent)});
     }
     
     utils.setItem("KeyPairs", jsonSavedKeyPairs);
@@ -38837,8 +38838,11 @@ const bitcoin = require('bitcoinjs-lib');
 const utils = require('./utils.js');    
 const Firebase = require("firebase");
 const crypto = require('crypto');
+const alerts = require('./alerts');
 
 $(function() {
+    utils.HideSpinner();
+    
     $("#top_nav a").each(function(index) {
        $('#'+$(this).attr('open-id')).hide();
     });
@@ -38903,6 +38907,8 @@ $('#submitEncryptWallet').click(function(e){
         return;
     }
     
+    //utils.ShowSpinner();
+    
     if (!savedPassword)
     {
         if (app.EncodeWallet(password))
@@ -38917,7 +38923,8 @@ $('#submitEncryptWallet').click(function(e){
         else
             alert('Decode error!');
     }
-
+   // utils.HideSpinner();
+    
     app.UpdateKeyPairsTableHTML();
     app.RefreshEncodeWalletTab();
 });
@@ -38981,6 +38988,8 @@ $('#submitBackup').click(function(e){
     for (var key in jsonSavedKeyPairs)
         jsonSavedKeyPairs[key].txs = [];
 
+    utils.ShowSpinner();
+    
     db.ref.set({
 	  uid: db.uid,
 	  keypairs: jsonSavedKeyPairs,
@@ -38988,10 +38997,11 @@ $('#submitBackup').click(function(e){
 	  security: utils.getItem("Security").value || {}
     }, function(error) {
         if (error) {
-            alert("Data could not be saved." + error);
+            alerts.Alert("Error !", "Data could not be saved." + error);
         } else {
-            alert("Data saved successfully.");
-        }        
+            alerts.Alert("Success !", "Data saved successfully.");
+        }  
+        utils.HideSpinner();
     });
 });
 
@@ -39000,6 +39010,8 @@ $('#submitRestore').click(function(e){
     
     const db= onBackupOrRestore();
     if (!db) return;
+    
+    utils.ShowSpinner();
 
     db.ref.once("value", function(snapshot) {
         utils.setItem("KeyPairs", snapshot.val().keypairs);
@@ -39010,9 +39022,13 @@ $('#submitRestore').click(function(e){
         app.UpdatePublicKeysTableHTML();
         app.RefreshEncodeWalletTab();
         
-        alert("Data restored successfully.");
+        alerts.Alert("Success !", "Data restored successfully.");
+        
+        utils.HideSpinner();
     }, function (errorObject) {
-        alert("The read failed: " + errorObject.code);
+        alerts.Alert("Error !", "The read failed: " + errorObject.code);
+        
+        utils.HideSpinner();
     });
     
 });
@@ -39092,7 +39108,7 @@ $('#btnPublicKeyReady').click(function () {
 });
 
 //browserify ~/workspace/server_side/htmlEvents.js -s htmlEvents > ~/workspace/site/js/wallet.js
-},{"./app":328,"./utils.js":332,"bitcoinjs-lib":315,"crypto":7,"firebase":324}],331:[function(require,module,exports){
+},{"./alerts":327,"./app":328,"./utils.js":332,"bitcoinjs-lib":315,"crypto":7,"firebase":324}],331:[function(require,module,exports){
 'use strict';
 
 const bitcoin = require('bitcoinjs-lib');
@@ -39284,16 +39300,17 @@ const Bip38 = require('bip38');
 const base58 = require('./base58');
 const bitcoin = require('bitcoinjs-lib');
 const alerts = require('./alerts');
+const $ = require('jquery');
 
 exports.coinsInfo = {
         0x00 : ['bitcoin', "https://btc.blockr.io/api/v1/address/", "?confirmations=0", "BTC", "https://btc.blockr.io/api/v1/tx/push"],
         0x30 : ['litecoin', "https://ltc.blockr.io/api/v1/address/", "?confirmations=0", "LTC", "https://ltc.blockr.io/api/v1/tx/push"],
-//        0x1e : ['dogecoin', "https://dogechain.info/api/v1/address/", "?confirmations=0", "DOGE", "https://btc.blockr.io/api/v1/tx/push"],
+       // 0x1e : ['dogecoin', "https://dogechain.info/api/v1/", "?confirmations=0", "DOGE", "https://btc.blockr.io/api/v1/tx/push"],
         0x6f : ['testnet', "https://tbtc.blockr.io/api/v1/address/", "?confirmations=0", "TBTC", "https://tbtc.blockr.io/api/v1/tx/push"]
     };
 
 exports.scryptParams = {
-          N: 8, 
+          N: 32, 
           r: 8, 
           p: 8
         };
@@ -39514,6 +39531,10 @@ exports.updateTransactions = function(callback)
 
 exports.getBalance = function(netID, arrayAddr, callback)
 {
+   // var url = exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2];
+   // if (netID == 0x1e) //DOGE
+   //     exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2];
+   // 
     console.log('get balance ' + exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2]);
     
     $.getJSON( exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2], function(data) {
@@ -39616,6 +39637,22 @@ exports.JSONreturn = function(success, message)
 {
     return {status: success, message: message};
 };
+
+exports.HideSpinner = function()
+{
+    var $preloader = $('#page-preloader'),
+        $spinner   = $preloader.find('.spinner');
+    $spinner.fadeOut();
+    $preloader.delay(350).fadeOut('slow');
+};
+
+exports.ShowSpinner = function()
+{
+    var $preloader = $('#page-preloader'),
+        $spinner   = $preloader.find('.spinner');
+    $spinner.show();
+    $preloader.show();
+};
 }).call(this,require("buffer").Buffer)
-},{"./alerts":327,"./base58":329,"bip38":223,"bitcoinjs-lib":315,"buffer":3,"crypto":7}]},{},[330])(330)
+},{"./alerts":327,"./base58":329,"bip38":223,"bitcoinjs-lib":315,"buffer":3,"crypto":7,"jquery":326}]},{},[330])(330)
 });
