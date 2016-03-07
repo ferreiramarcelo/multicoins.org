@@ -6,6 +6,7 @@ const utils = require('./utils.js');
 const Firebase = require("firebase");
 const crypto = require('crypto');
 const alerts = require('./alerts');
+const $ = require('jquery');
 
 $(function() {
     utils.HideSpinner();
@@ -142,7 +143,7 @@ $('#submitBackup').click(function(e){
     {
         alert("Error: You can not save decoded wallet!");
 
-        $('.nav-tabs a[href="#tab_encrypt_wallet"]').tab('show');
+        jQuery('.nav-tabs a[href="#tab_encrypt_wallet"]').tab('show');
         
         return;
     }
@@ -273,5 +274,59 @@ $('#btnPublicKeyReady').click(function () {
     
 
 });
+
+function InitNavTab(id)
+{
+    $("#top_nav").find(".active").removeClass("active");
+    $("a[open-id='"+id+"']").parent().addClass("active");
+
+    $("#top_nav a").each(function(index) {
+       $('#'+$(this).attr('open-id')).hide();
+    });
+    $("#"+id).show();
+    
+}
+
+$('#toolButtonSend').click(function () {
+    InitNavTab("tab_trade_top");
+
+    jQuery('.nav-tabs a[href="#tab_send_money"]').tab('show');
+});
+$('#toolButtonRequest').click(function () {
+    InitNavTab("tab_trade_top");
+
+    jQuery('.nav-tabs a[href="#tab_request_money"]').tab('show');
+});
+$('#toolButtonTransactions').click(function () {
+    InitNavTab("tab_trade_top");
+    
+    utils.updateTransactions(app.UpdateTransactionsTableHTML);
+
+    jQuery('.nav-tabs a[href="#tab_transactions"]').tab('show');
+});
+
+$('#toolButtonSignMessage').click(function () {
+    InitNavTab("tab_tools");
+
+    jQuery('.nav-tabs a[href="#tab_sign_message"]').tab('show');
+});
+$('#toolButtonCheckMessage').click(function () {
+    InitNavTab("tab_tools");
+
+    jQuery('.nav-tabs a[href="#tab_verify_message"]').tab('show');
+});
+
+$('#toolButtonEncodeWallet').click(function () {
+    InitNavTab("tab_security");
+
+    jQuery('.nav-tabs a[href="#tab_encrypt_wallet"]').tab('show');
+});
+$('#toolButtonSaveWallet').click(function () {
+    InitNavTab("tab_security");
+
+    jQuery('.nav-tabs a[href="#tab_backup_wallet"]').tab('show');
+});
+
+
 
 //browserify ~/workspace/server_side/htmlEvents.js -s htmlEvents > ~/workspace/site/js/wallet.js

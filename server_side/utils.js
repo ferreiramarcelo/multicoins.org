@@ -15,7 +15,7 @@ exports.coinsInfo = {
     };
 
 exports.scryptParams = {
-          N: 32, 
+          N: 8, 
           r: 8, 
           p: 8
         };
