@@ -38506,11 +38506,40 @@ exports.RefreshEncodeWalletTab = function()
 
 exports.UpdateBalanceTable = function()
 {
+    var jsonSavedKeyPairs = utils.getItem("KeyPairs").value || {}; 
+    const jsonSavedSettings = utils.getItem("Settings").value || {};
+    
     $( "#tab_tab_balance" ).html('');
     for (var key in utils.coinsInfo)
     {
-        const tdCoin = $('<td>' + utils.coinsInfo[key][0]+"</td>");
-        const tdBalance = $('<td>' + utils.getSavedBalance(key)+"</td>");
+        const coin = key;
+
+        if (!jsonSavedSettings["filterCoins"][utils.coinsInfo[key][0]])
+            jsonSavedSettings["filterCoins"][utils.coinsInfo[key][0]] = "checked";
+            
+        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[key][0]];
+        const tdCoin = $('<td><div class="checkbox"><label><input coin="'+key+'" type="checkbox" value="" '+checked+'>' + utils.coinsInfo[key][0]+"</label></div></td>");
+        const tdBalance = $('<td><div class="checkbox">' + utils.getSavedBalance(key)+"</div></td>");
+
+        tdCoin[0].onclick = function() {
+            var jsonSavedSettingsVar = utils.getItem("Settings").value;
+            
+            if ($("input[coin='"+coin+"']")[0].checked)
+                jsonSavedSettingsVar["filterCoins"][utils.coinsInfo[coin][0]] = "checked";
+            else
+                jsonSavedSettingsVar["filterCoins"][utils.coinsInfo[coin][0]] = "false";
+                
+            utils.setItem("Settings", jsonSavedSettingsVar);
+            
+            if ($("#tab_request_money").is(':visible'))
+                exports.UpdateKeyPairsTableHTML();
+                
+            if ($("#tab_transactions").is(':visible'))
+                exports.UpdateTransactionsTableHTML();
+                
+            if ($("#tab_send_money").is(':visible'))
+                exports.UpdatePublicKeysTableHTML();
+        };
 
         $( "#tab_tab_balance" ).append($("<tr></tr>").append(
             tdCoin, tdBalance ));
@@ -38520,14 +38549,19 @@ exports.UpdateBalanceTable = function()
 exports.UpdateKeyPairsTableHTML = function()
 {
     var jsonSavedKeyPairs = utils.getItem("KeyPairs").value || {}; 
+    const jsonSavedSettings = utils.getItem("Settings").value || {};
     
     $( "#keypairs" ).html('');
     for (var key in jsonSavedKeyPairs)
     {
-        console.log('jsonSavedKeyPairs[key].network]='+jsonSavedKeyPairs[key].network);
+        //console.log('jsonSavedKeyPairs[key].network]='+jsonSavedKeyPairs[key].network);
         if (utils.coinsInfo[jsonSavedKeyPairs[key].network] == undefined)
             continue;
             
+        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[jsonSavedKeyPairs[key].network][0]];
+        if (checked == "false")
+            continue;
+
         const address = jsonSavedKeyPairs[key].address;
         const privkey = jsonSavedKeyPairs[key].private_key;
          
@@ -38563,17 +38597,21 @@ exports.UpdateKeyPairsTableHTML = function()
 exports.UpdatePublicKeysTableHTML = function()
 {
     var jsonSavedPublicKeys = utils.getItem("PublicKeys").value || {}; 
+    const jsonSavedSettings = utils.getItem("Settings").value || {};
     
     $( "#addresses_to_send" ).html('');
     for (var key in jsonSavedPublicKeys)
     {
-        //console.log('key='+key);
         const address = jsonSavedPublicKeys[key].address;
         const network = jsonSavedPublicKeys[key].network;
         
         const strCoinShortName = utils.coinsInfo[network][3];
         const strLabel = jsonSavedPublicKeys[key].label;
-        
+
+        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[network][0]];
+        if (checked == "false")
+            continue;
+            
         //console.log('jsonSavedPublicKeys[key]='+JSON.stringify(jsonSavedPublicKeys[key]));
         //console.log('jsonSavedPublicKeys[key].network='+JSON.stringify(network));
         
@@ -38605,6 +38643,7 @@ exports.UpdateTransactionsTableHTML = function()
     $( "#transactions" ).html('');
 
     var jsonSavedKeyPairs = utils.getItem("KeyPairs").value || {}; 
+    const jsonSavedSettings = utils.getItem("Settings").value || {};
     
     var arrayTXs = [];
     
@@ -38613,6 +38652,10 @@ exports.UpdateTransactionsTableHTML = function()
         const txs = jsonSavedKeyPairs[key].txs || 0;
         if (!txs) continue;
             
+        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[jsonSavedKeyPairs[key].network][0]];
+        if (checked == "false")
+            continue;
+
         jsonSavedKeyPairs[key].txs.forEach(function(transaction) {
             const tx = {
                 "network" : utils.coinsInfo[jsonSavedKeyPairs[key].network][0],
@@ -38850,6 +38893,7 @@ $(function() {
     
     if ((!utils.getItem("KeyPairs").value || !Object.keys(utils.getItem("KeyPairs").value).length) && utils.isValidEncodePassword(""))
     {
+        //For new users shgenerate random bitcoin address
         for (var key in utils.coinsInfo)
         {
             const network = bitcoin.networks[utils.coinsInfo[key][0]];
@@ -38859,6 +38903,16 @@ $(function() {
             break;
         }
     }
+
+///////////////////////////////////////////////////////////////////////////    
+    //Init Settings
+    var jsonSavedSettings = utils.getItem("Settings").value || {}; 
+    
+    if (!jsonSavedSettings["filterCoins"])
+        jsonSavedSettings["filterCoins"] = {};
+    
+    utils.setItem("Settings", jsonSavedSettings);
+///////////////////////////////////////////////////////////////////////////    
 
     app.RefreshKeyPairsBalance();
     app.UpdatePublicKeysTableHTML();

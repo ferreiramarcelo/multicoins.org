@@ -17,6 +17,7 @@ $(function() {
     
     if ((!utils.getItem("KeyPairs").value || !Object.keys(utils.getItem("KeyPairs").value).length) && utils.isValidEncodePassword(""))
     {
+        //For new users shgenerate random bitcoin address
         for (var key in utils.coinsInfo)
         {
             const network = bitcoin.networks[utils.coinsInfo[key][0]];
@@ -26,6 +27,16 @@ $(function() {
             break;
         }
     }
+
+///////////////////////////////////////////////////////////////////////////    
+    //Init Settings
+    var jsonSavedSettings = utils.getItem("Settings").value || {}; 
+    
+    if (!jsonSavedSettings["filterCoins"])
+        jsonSavedSettings["filterCoins"] = {};
+    
+    utils.setItem("Settings", jsonSavedSettings);
+///////////////////////////////////////////////////////////////////////////    
 
     app.RefreshKeyPairsBalance();
     app.UpdatePublicKeysTableHTML();
