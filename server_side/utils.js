@@ -345,16 +345,19 @@ exports.JSONreturn = function(success, message)
 
 exports.HideSpinner = function()
 {
-    var $preloader = $('#page-preloader'),
+   /* var $preloader = $('#page-preloader'),
         $spinner   = $preloader.find('.spinner');
     $spinner.fadeOut();
-    $preloader.delay(350).fadeOut('slow');
+    $preloader.delay(350).fadeOut('slow');*/
+    $('#page-preloader').hide();
+    $('#page-preloader-info').hide();
 };
 
 exports.ShowSpinner = function()
 {
-    var $preloader = $('#page-preloader'),
+   /* var $preloader = $('#page-preloader'),
         $spinner   = $preloader.find('.spinner');
     $spinner.show();
-    $preloader.show();
+    $preloader.show();*/
+    $('#page-preloader').show();
 };

@@ -340,4 +340,4 @@ $('#toolButtonSaveWallet').click(function () {
 
 
 
-//browserify ~/workspace/server_side/htmlEvents.js -s htmlEvents > ~/workspace/site/js/wallet.js
+//browserify ~/workspace/server_side/htmlEvents.js | uglifyjs -s htmlEvents > ~/workspace/site/js/wallet.js
