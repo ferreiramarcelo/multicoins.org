@@ -298,7 +298,7 @@ exports.UpdateTransactionsTableHTML = function()
         const tx = groupTXs[key];
         
         const tdCoin = $("<td>"+ tx.network+"</td>");
-        const tdStatus = $("<td>" + tx.transaction.confirmations + "</td>");
+        const tdStatus = $("<td>" + (tx.transaction.confirmations || 0) + "</td>");
         const tdDate = $("<td>" + tx.transaction.time_utc + "</td>");
         const tdDescription = $("<td>" + tx.transaction.tx + "</td>");
 

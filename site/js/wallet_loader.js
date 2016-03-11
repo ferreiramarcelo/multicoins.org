@@ -1,6 +1,7 @@
 
 var jsUrls = [
     'https://raw.githubusercontent.com/3s3s/multicoins.org/master/site/js/wallet.js'];
+    //'/js/wallet.js'];
     
 var g_loaded = 0.0;
 var g_total = 1024*1024*25;
@@ -21,8 +22,12 @@ function LoadScript(url, onEnd)
         }
     };
     xmlhttp.onprogress = function(event) {
-        g_loaded += parseFloat(event.loaded);
-        document.getElementById('page-preloader-info').innerHTML = parseFloat(100.0*g_loaded/g_total).toFixed(1) + "%";
+        var total = 1024*1024*2;
+        if (event.total)
+            total = event.total;
+            
+        var loaded = parseFloat(event.loaded);
+        document.getElementById('page-preloader-info').innerHTML = parseFloat(100.0*parseFloat(loaded)/parseFloat(total)).toFixed(1) + "%";
     };
     xmlhttp.send(null);
 }

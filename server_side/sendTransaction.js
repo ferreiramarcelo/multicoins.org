@@ -6,7 +6,7 @@ const $ = require('jquery');
 
 exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
 {
-    $('#spanModalSendAddress').text(address);
+    $('.spanModalSendAddress')[0].textContent = address;
     $('#inputModalSendAddressLabel').val(strLabel);
     $('#spanModalAmountCoinName').text(strCoinShortName);
     $('#spanModalFeeCoinName').text(strCoinShortName);
@@ -51,7 +51,7 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
 };
 
 $('#btnSendCoinsReady').click(function () {
-    const addressSendTo = $('#spanModalSendAddress').text();
+    const addressSendTo = $('.spanModalSendAddress')[0].textContent;
     const password = $('#inputSendMoneyPassword').val();
     
     if (utils.getSavedEncodePassword().length && !utils.isValidEncodePassword(password))

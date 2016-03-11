@@ -192,7 +192,11 @@ exports.updateTransactions = function(callback)
         coins[key] = [];
 
     for (var key in jsonSavedKeyPairs)
+    {
         coins[jsonSavedKeyPairs[key].network].push(jsonSavedKeyPairs[key].address);
+        jsonSavedKeyPairs[jsonSavedKeyPairs[key].address].txs = [];
+    }
+    exports.setItem("KeyPairs", jsonSavedKeyPairs);
    
     function SaveTransactions (netID, data)
     {
@@ -207,13 +211,37 @@ exports.updateTransactions = function(callback)
         {
             data.forEach(function(element) {
                 if (jsonSavedKeyPairs[element.address])
-                    jsonSavedKeyPairs[element.address].txs = element.txs;
+                {
+                    if (element.txs)
+                        jsonSavedKeyPairs[element.address].txs = jsonSavedKeyPairs[element.address].txs.concat(element.txs);
+                    else 
+                    {
+                        if (element.unconfirmed)
+                        {
+                            element.unconfirmed.forEach(function(item) {
+                                jsonSavedKeyPairs[element.address].txs.push(item);
+                            });
+                        }
+                    }
+                }
             });
         }
         else
         {
             if (jsonSavedKeyPairs[data.address])
-                jsonSavedKeyPairs[data.address].txs = data.txs;
+            {
+                if (data.txs)
+                    jsonSavedKeyPairs[data.address].txs = jsonSavedKeyPairs[data.address].txs.concat(data.txs);
+                else
+                {
+                    if (data.unconfirmed)
+                    {
+                        data.unconfirmed.forEach(function(element) {
+                            jsonSavedKeyPairs[element.address].txs.push(element);
+                        });
+                    }
+                }
+            }
         }
 
         exports.setItem("KeyPairs", jsonSavedKeyPairs);
@@ -270,10 +298,16 @@ exports.getTransactions = function(netID, arrayAddr, callback)
 {
     $.getJSON( exports.coinsInfo[netID][1] + "txs/" + arrayAddr.toString(), function(data) {
         callback(netID, data.data);
-    })
-      .fail(function() {
-          callback(netID, exports.JSONreturn(false, 'error'));
-      });      
+        
+        $.getJSON( exports.coinsInfo[netID][1] + "unconfirmed/" + arrayAddr.toString(), function(data2) {
+            callback(netID, data2.data);
+        }).fail(function() {
+            callback(netID, exports.JSONreturn(false, 'error'));
+        });      
+    }).fail(function() {
+        callback(netID, exports.JSONreturn(false, 'error'));
+    });   
+    
 }
 
 exports.getUnspentTransactions = function(netID, arrayAddr, callback)
