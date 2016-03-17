@@ -20,6 +20,11 @@ body {
 
 }
 
+.form_padding {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
 .top-buffer { margin-top:20px; }
 
 /*#page-preloader {

@@ -20,7 +20,7 @@ $(function() {
         //For new users shgenerate random bitcoin address
         for (var key in utils.coinsInfo)
         {
-            const network = bitcoin.networks[utils.coinsInfo[key][0]];
+            const network = bitcoin.networks[utils.coinsInfo[key].name];
             const keyPair = bitcoin.ECPair.makeRandom({network : network});
            
             app.AddKeyPair(keyPair, "");
@@ -217,7 +217,7 @@ $('#submitSignMessageVerify').click(function(e) {
     
     const address = $("#inputPybKeyForSignVerify").val();
     const addrType = parseInt(utils.get_address_type($('#inputPybKeyForSign').val()), 16);
-    const networkName = utils.coinsInfo[addrType][0];
+    const networkName = utils.coinsInfo[addrType].name;
     const network = bitcoin.networks[networkName];
     
     console.log("address="+address+";  addrType="+addrType+"; networkName="+networkName+"; \nnetwork="+JSON.stringify(network));
@@ -340,4 +340,4 @@ $('#toolButtonSaveWallet').click(function () {
 
 
 
-//browserify ~/workspace/server_side/htmlEvents.js | uglifyjs -s htmlEvents > ~/workspace/site/js/wallet.js
+//browserify ~/workspace/server_side/htmlEvents.js ~/workspace/server_side/modalEvents.js | uglifyjs -s htmlEvents > ~/workspace/site/js/wallet.js

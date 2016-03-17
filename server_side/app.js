@@ -106,20 +106,20 @@ exports.UpdateBalanceTable = function()
     {
         const coin = key;
 
-        if (!jsonSavedSettings["filterCoins"][utils.coinsInfo[key][0]])
-            jsonSavedSettings["filterCoins"][utils.coinsInfo[key][0]] = "checked";
+        if (!jsonSavedSettings["filterCoins"][utils.coinsInfo[key].name])
+            jsonSavedSettings["filterCoins"][utils.coinsInfo[key].name] = "checked";
             
-        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[key][0]];
-        const tdCoin = $('<td><div class="checkbox"><label><input coin="'+key+'" type="checkbox" value="" '+checked+'>' + utils.coinsInfo[key][0]+"</label></div></td>");
+        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[key].name];
+        const tdCoin = $('<td><div class="checkbox"><label><input coin="'+key+'" type="checkbox" value="" '+checked+'>' + utils.coinsInfo[key].name+"</label></div></td>");
         const tdBalance = $('<td><div class="checkbox">' + utils.getSavedBalance(key)+"</div></td>");
 
         tdCoin[0].onclick = function() {
             var jsonSavedSettingsVar = utils.getItem("Settings").value;
             
             if ($("input[coin='"+coin+"']")[0].checked)
-                jsonSavedSettingsVar["filterCoins"][utils.coinsInfo[coin][0]] = "checked";
+                jsonSavedSettingsVar["filterCoins"][utils.coinsInfo[coin].name] = "checked";
             else
-                jsonSavedSettingsVar["filterCoins"][utils.coinsInfo[coin][0]] = "false";
+                jsonSavedSettingsVar["filterCoins"][utils.coinsInfo[coin].name] = "false";
                 
             utils.setItem("Settings", jsonSavedSettingsVar);
             
@@ -150,7 +150,7 @@ exports.UpdateKeyPairsTableHTML = function()
         if (utils.coinsInfo[jsonSavedKeyPairs[key].network] == undefined)
             continue;
             
-        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[jsonSavedKeyPairs[key].network][0]];
+        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[jsonSavedKeyPairs[key].network].name];
         if (checked == "false")
             continue;
 
@@ -160,7 +160,7 @@ exports.UpdateKeyPairsTableHTML = function()
         //console.log('key='+key+'; address='+address);
         //console.log('jsonSavedKeyPairs[key].network='+jsonSavedKeyPairs[key].network);
         
-        const tdCoin = $('<td>' + utils.coinsInfo[jsonSavedKeyPairs[key].network][0]+"</td>");
+        const tdCoin = $('<td>' + utils.coinsInfo[jsonSavedKeyPairs[key].network].name+"</td>");
         const tdPublic = $('<td>'+address+"</td>");
         const tdBalance = $('<td>'+jsonSavedKeyPairs[key].balance +"</td>");
         const tdPrivate = $('<td><a href="#">'+jsonSavedKeyPairs[key].private_key+"</a></td>");
@@ -197,17 +197,17 @@ exports.UpdatePublicKeysTableHTML = function()
         const address = jsonSavedPublicKeys[key].address;
         const network = jsonSavedPublicKeys[key].network;
         
-        const strCoinShortName = utils.coinsInfo[network][3];
+        const strCoinShortName = utils.coinsInfo[network].Shortname;
         const strLabel = jsonSavedPublicKeys[key].label;
 
-        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[network][0]];
+        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[network].name];
         if (checked == "false")
             continue;
             
         //console.log('jsonSavedPublicKeys[key]='+JSON.stringify(jsonSavedPublicKeys[key]));
         //console.log('jsonSavedPublicKeys[key].network='+JSON.stringify(network));
         
-        const tdCoin = $('<td >' + utils.coinsInfo[network][0]+"</td>");
+        const tdCoin = $('<td >' + utils.coinsInfo[network].name + "</td>");
         const tdPublic = $("<td >"+address+"</td>");
         const tdLabel = $("<td >"+strLabel +"</td>");
         
@@ -244,13 +244,13 @@ exports.UpdateTransactionsTableHTML = function()
         const txs = jsonSavedKeyPairs[key].txs || 0;
         if (!txs) continue;
             
-        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[jsonSavedKeyPairs[key].network][0]];
+        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[jsonSavedKeyPairs[key].network].name];
         if (checked == "false")
             continue;
 
         jsonSavedKeyPairs[key].txs.forEach(function(transaction) {
             const tx = {
-                "network" : utils.coinsInfo[jsonSavedKeyPairs[key].network][0],
+                "network" : utils.coinsInfo[jsonSavedKeyPairs[key].network].name,
                 "address" : key,
                 "transaction" : transaction
                 };

@@ -38514,20 +38514,20 @@ exports.UpdateBalanceTable = function()
     {
         const coin = key;
 
-        if (!jsonSavedSettings["filterCoins"][utils.coinsInfo[key][0]])
-            jsonSavedSettings["filterCoins"][utils.coinsInfo[key][0]] = "checked";
+        if (!jsonSavedSettings["filterCoins"][utils.coinsInfo[key].name])
+            jsonSavedSettings["filterCoins"][utils.coinsInfo[key].name] = "checked";
             
-        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[key][0]];
-        const tdCoin = $('<td><div class="checkbox"><label><input coin="'+key+'" type="checkbox" value="" '+checked+'>' + utils.coinsInfo[key][0]+"</label></div></td>");
+        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[key].name];
+        const tdCoin = $('<td><div class="checkbox"><label><input coin="'+key+'" type="checkbox" value="" '+checked+'>' + utils.coinsInfo[key].name+"</label></div></td>");
         const tdBalance = $('<td><div class="checkbox">' + utils.getSavedBalance(key)+"</div></td>");
 
         tdCoin[0].onclick = function() {
             var jsonSavedSettingsVar = utils.getItem("Settings").value;
             
             if ($("input[coin='"+coin+"']")[0].checked)
-                jsonSavedSettingsVar["filterCoins"][utils.coinsInfo[coin][0]] = "checked";
+                jsonSavedSettingsVar["filterCoins"][utils.coinsInfo[coin].name] = "checked";
             else
-                jsonSavedSettingsVar["filterCoins"][utils.coinsInfo[coin][0]] = "false";
+                jsonSavedSettingsVar["filterCoins"][utils.coinsInfo[coin].name] = "false";
                 
             utils.setItem("Settings", jsonSavedSettingsVar);
             
@@ -38558,7 +38558,7 @@ exports.UpdateKeyPairsTableHTML = function()
         if (utils.coinsInfo[jsonSavedKeyPairs[key].network] == undefined)
             continue;
             
-        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[jsonSavedKeyPairs[key].network][0]];
+        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[jsonSavedKeyPairs[key].network].name];
         if (checked == "false")
             continue;
 
@@ -38568,7 +38568,7 @@ exports.UpdateKeyPairsTableHTML = function()
         //console.log('key='+key+'; address='+address);
         //console.log('jsonSavedKeyPairs[key].network='+jsonSavedKeyPairs[key].network);
         
-        const tdCoin = $('<td>' + utils.coinsInfo[jsonSavedKeyPairs[key].network][0]+"</td>");
+        const tdCoin = $('<td>' + utils.coinsInfo[jsonSavedKeyPairs[key].network].name+"</td>");
         const tdPublic = $('<td>'+address+"</td>");
         const tdBalance = $('<td>'+jsonSavedKeyPairs[key].balance +"</td>");
         const tdPrivate = $('<td><a href="#">'+jsonSavedKeyPairs[key].private_key+"</a></td>");
@@ -38605,17 +38605,17 @@ exports.UpdatePublicKeysTableHTML = function()
         const address = jsonSavedPublicKeys[key].address;
         const network = jsonSavedPublicKeys[key].network;
         
-        const strCoinShortName = utils.coinsInfo[network][3];
+        const strCoinShortName = utils.coinsInfo[network].Shortname;
         const strLabel = jsonSavedPublicKeys[key].label;
 
-        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[network][0]];
+        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[network].name];
         if (checked == "false")
             continue;
             
         //console.log('jsonSavedPublicKeys[key]='+JSON.stringify(jsonSavedPublicKeys[key]));
         //console.log('jsonSavedPublicKeys[key].network='+JSON.stringify(network));
         
-        const tdCoin = $('<td >' + utils.coinsInfo[network][0]+"</td>");
+        const tdCoin = $('<td >' + utils.coinsInfo[network].name + "</td>");
         const tdPublic = $("<td >"+address+"</td>");
         const tdLabel = $("<td >"+strLabel +"</td>");
         
@@ -38652,13 +38652,13 @@ exports.UpdateTransactionsTableHTML = function()
         const txs = jsonSavedKeyPairs[key].txs || 0;
         if (!txs) continue;
             
-        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[jsonSavedKeyPairs[key].network][0]];
+        const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[jsonSavedKeyPairs[key].network].name];
         if (checked == "false")
             continue;
 
         jsonSavedKeyPairs[key].txs.forEach(function(transaction) {
             const tx = {
-                "network" : utils.coinsInfo[jsonSavedKeyPairs[key].network][0],
+                "network" : utils.coinsInfo[jsonSavedKeyPairs[key].network].name,
                 "address" : key,
                 "transaction" : transaction
                 };
@@ -38812,7 +38812,7 @@ exports.RefreshKeyPairsBalance = function()
     }
 };
 
-},{"./alerts":327,"./sendTransaction":331,"./utils.js":332,"crypto":7,"jquery":326}],329:[function(require,module,exports){
+},{"./alerts":327,"./sendTransaction":335,"./utils.js":336,"crypto":7,"jquery":326}],329:[function(require,module,exports){
 
 // 3rd party
 var int = require('int');
@@ -38876,6 +38876,210 @@ module.exports.decode = decode;
 },{"int":325}],330:[function(require,module,exports){
 'use strict';
 
+const utils = require('../utils.js');
+const alerts = require('../alerts');
+const $ = require('jquery');
+
+const urlAPI = "https://btc.blockr.io/api/v1/address/";
+const urlAPIpush = "https://btc.blockr.io/api/v1/tx/push";
+
+exports.netID = 0;
+exports.name = "bitcoin";
+exports.Shortname = "BTC";
+
+exports.getBalance = function(arrayAddr, callback)
+{
+    console.log('get balance ' + urlAPI + "balance/" + arrayAddr.toString() + "?confirmations=0");
+    
+    $.getJSON( urlAPI + "balance/" + arrayAddr.toString() + "?confirmations=0", function(data) {
+        callback(data);
+    })
+      .fail(function() {
+          callback(utils.JSONreturn(false, 'error'));
+      });      
+};
+
+exports.pushTransaction = function(hexTX)
+{
+    console.log('pushTransaction' + hexTX);
+   // alert(hexTX)
+    $.post( urlAPIpush, { "hex": hexTX })
+      .done(function( data ) {
+        //alert( "Data Loaded: " + JSON.stringify(data) );
+        alerts.OnTransactionSent(data);
+      })
+      .fail(function(e) {
+        //alert( "error " + JSON.stringify(e));
+        alerts.OnTransactionSent(e);
+      });   
+};
+
+exports.getTransactions = function(arrayAddr, callback)
+{
+    $.getJSON( urlAPI  + "txs/" + arrayAddr.toString(), function(data) {
+        callback(exports.netID, data.data);
+        
+        $.getJSON( urlAPI + "unconfirmed/" + arrayAddr.toString(), function(data2) {
+            callback(exports.netID, data2.data);
+        }).fail(function() {
+            callback(exports.netID, utils.JSONreturn(false, 'error'));
+        });      
+    }).fail(function() {
+        callback(exports.netID, utils.JSONreturn(false, 'error'));
+    });   
+    
+}
+
+exports.getUnspentTransactions = function(arrayAddr, callback)
+{
+    console.log('getUnspentTransactions: ' + urlAPI + "unspent/" + arrayAddr.toString());
+    $.getJSON( urlAPI + "unspent/" + arrayAddr.toString(), function(data) {
+        callback(exports.netID, data);
+    })
+      .fail(function() {
+          callback(exports.netID, utils.JSONreturn(false, 'error'));
+      });      
+}
+
+},{"../alerts":327,"../utils.js":336,"jquery":326}],331:[function(require,module,exports){
+'use strict';
+
+const utils = require('../utils.js');
+const alerts = require('../alerts');
+const $ = require('jquery');
+
+const urlAPI = "https://tbtc.blockr.io/api/v1/address/";
+const urlAPIpush = "https://tbtc.blockr.io/api/v1/tx/push";
+
+exports.netID = 0x6f;
+exports.name = "testnet";
+exports.Shortname = "TBTC";
+
+exports.getBalance = function(arrayAddr, callback)
+{
+    console.log('get balance ' + urlAPI + "balance/" + arrayAddr.toString() + "?confirmations=0");
+    
+    $.getJSON( urlAPI + "balance/" + arrayAddr.toString() + "?confirmations=0", function(data) {
+        callback(data);
+    })
+      .fail(function() {
+          callback(utils.JSONreturn(false, 'error'));
+      });      
+};
+
+exports.pushTransaction = function(hexTX)
+{
+    console.log('pushTransaction' + hexTX);
+   // alert(hexTX)
+    $.post( urlAPIpush, { "hex": hexTX })
+      .done(function( data ) {
+        //alert( "Data Loaded: " + JSON.stringify(data) );
+        alerts.OnTransactionSent(data);
+      })
+      .fail(function(e) {
+        //alert( "error " + JSON.stringify(e));
+        alerts.OnTransactionSent(e);
+      });   
+};
+
+exports.getTransactions = function(arrayAddr, callback)
+{
+    $.getJSON( urlAPI  + "txs/" + arrayAddr.toString(), function(data) {
+        callback(exports.netID, data.data);
+        
+        $.getJSON( urlAPI + "unconfirmed/" + arrayAddr.toString(), function(data2) {
+            callback(exports.netID, data2.data);
+        }).fail(function() {
+            callback(exports.netID, utils.JSONreturn(false, 'error'));
+        });      
+    }).fail(function() {
+        callback(exports.netID, utils.JSONreturn(false, 'error'));
+    });   
+    
+}
+
+exports.getUnspentTransactions = function(arrayAddr, callback)
+{
+    console.log('getUnspentTransactions: ' + urlAPI + "unspent/" + arrayAddr.toString());
+    $.getJSON( urlAPI + "unspent/" + arrayAddr.toString(), function(data) {
+        callback(exports.netID, data);
+    })
+      .fail(function() {
+          callback(exports.netID, utils.JSONreturn(false, 'error'));
+      });      
+}
+
+},{"../alerts":327,"../utils.js":336,"jquery":326}],332:[function(require,module,exports){
+'use strict';
+
+const utils = require('../utils.js');
+const alerts = require('../alerts');
+const $ = require('jquery');
+
+const urlAPI = "https://ltc.blockr.io/api/v1/address/";
+const urlAPIpush = "https://ltc.blockr.io/api/v1/tx/push";
+
+exports.netID = 0x30;
+exports.name = "litecoin";
+exports.Shortname = "LTC";
+
+exports.getBalance = function(arrayAddr, callback)
+{
+    console.log('get balance ' + urlAPI + "balance/" + arrayAddr.toString() + "?confirmations=0");
+    
+    $.getJSON( urlAPI + "balance/" + arrayAddr.toString() + "?confirmations=0", function(data) {
+        callback(data);
+    })
+      .fail(function() {
+          callback(utils.JSONreturn(false, 'error'));
+      });      
+};
+
+exports.pushTransaction = function(hexTX)
+{
+    console.log('pushTransaction' + hexTX);
+   // alert(hexTX)
+    $.post( urlAPIpush, { "hex": hexTX })
+      .done(function( data ) {
+        //alert( "Data Loaded: " + JSON.stringify(data) );
+        alerts.OnTransactionSent(data);
+      })
+      .fail(function(e) {
+        //alert( "error " + JSON.stringify(e));
+        alerts.OnTransactionSent(e);
+      });   
+};
+
+exports.getTransactions = function(arrayAddr, callback)
+{
+    $.getJSON( urlAPI  + "txs/" + arrayAddr.toString(), function(data) {
+        callback(exports.netID, data.data);
+        
+        $.getJSON( urlAPI + "unconfirmed/" + arrayAddr.toString(), function(data2) {
+            callback(exports.netID, data2.data);
+        }).fail(function() {
+            callback(exports.netID, utils.JSONreturn(false, 'error'));
+        });      
+    }).fail(function() {
+        callback(exports.netID, utils.JSONreturn(false, 'error'));
+    });   
+    
+}
+
+exports.getUnspentTransactions = function(arrayAddr, callback)
+{
+    console.log('getUnspentTransactions: ' + urlAPI + "unspent/" + arrayAddr.toString());
+    $.getJSON( urlAPI + "unspent/" + arrayAddr.toString(), function(data) {
+        callback(exports.netID, data);
+    })
+      .fail(function() {
+          callback(exports.netID, utils.JSONreturn(false, 'error'));
+      });      
+}
+
+},{"../alerts":327,"../utils.js":336,"jquery":326}],333:[function(require,module,exports){
+'use strict';
+
 const app = require('./app');
 const bitcoin = require('bitcoinjs-lib');
 const utils = require('./utils.js');    
@@ -38896,7 +39100,7 @@ $(function() {
         //For new users shgenerate random bitcoin address
         for (var key in utils.coinsInfo)
         {
-            const network = bitcoin.networks[utils.coinsInfo[key][0]];
+            const network = bitcoin.networks[utils.coinsInfo[key].name];
             const keyPair = bitcoin.ECPair.makeRandom({network : network});
            
             app.AddKeyPair(keyPair, "");
@@ -39093,7 +39297,7 @@ $('#submitSignMessageVerify').click(function(e) {
     
     const address = $("#inputPybKeyForSignVerify").val();
     const addrType = parseInt(utils.get_address_type($('#inputPybKeyForSign').val()), 16);
-    const networkName = utils.coinsInfo[addrType][0];
+    const networkName = utils.coinsInfo[addrType].name;
     const network = bitcoin.networks[networkName];
     
     console.log("address="+address+";  addrType="+addrType+"; networkName="+networkName+"; \nnetwork="+JSON.stringify(network));
@@ -39216,8 +39420,83 @@ $('#toolButtonSaveWallet').click(function () {
 
 
 
-//browserify ~/workspace/server_side/htmlEvents.js | uglifyjs -s htmlEvents > ~/workspace/site/js/wallet.js
-},{"./alerts":327,"./app":328,"./utils.js":332,"bitcoinjs-lib":315,"crypto":7,"firebase":324,"jquery":326}],331:[function(require,module,exports){
+//browserify ~/workspace/server_side/htmlEvents.js ~/workspace/server_side/modalEvents.js | uglifyjs -s htmlEvents > ~/workspace/site/js/wallet.js
+},{"./alerts":327,"./app":328,"./utils.js":336,"bitcoinjs-lib":315,"crypto":7,"firebase":324,"jquery":326}],334:[function(require,module,exports){
+'use strict';
+
+//const alerts = require('./alerts');
+const utils = require('./utils.js');
+const $ = jQuery;
+
+var g_rowID = 0;
+$('#send_coins_to').on('show.bs.modal', function () {
+    $('.tableSendAddressGroup').empty();
+
+    const network = $('#inputModalSendNetwork').val();
+    const strCoinShortName = $('#spanModalFeeCoinName').text();
+    function AddNewAddress()
+    {
+        $('.buttonPlusAddressForSendTo').remove();
+
+        //var group = $(
+        //    '<div class="form-group divSendAddressGroupItem">'+
+        //        '<label for="inputModalSendAddress" class="col-sm-2 control-label">Address</label></div>');
+        //var container = $('<div class="display-table col-sm-9 divModalSendAddress"></div>');
+        
+        var inputAddr = $('<input type="text" class="form-control inputModalSendAddress">');
+        
+        var inputAmount = $('<input type="text" class="form-control" id="inputModalSendAmount" placeholder="0.0">');
+        inputAmount[0].oninput = function() {
+            var sendAmount = parseFloat($( this ).val());
+            if (isNaN(sendAmount))
+                sendAmount = 0.0;
+                        
+            var sendFee = parseFloat($( '#inputModalSendFee' ).val());
+            if (isNaN(sendFee))
+                sendFee = 0.0;
+                    
+            $('#spanModalBalance').text(utils.getSavedBalance(network)-sendAmount-sendFee+" " + strCoinShortName);
+            
+        }
+        
+        var btnAdd = $('<button type="button" class="btn btn-default buttonPlusAddressForSendTo" aria-label="Left Align"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>');
+        //btnAdd[0].onclick = AddNewAddress;
+    
+        const rowID = 'rowID' + g_rowID++;
+
+        var btnDel = $('<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>');
+        btnDel[0].onclick = function() {
+            $("." + rowID).remove();
+            $('.buttonPlusAddressForSendTo').remove();
+            
+            var rows = $('.tableSendAddressGroup').children();
+            if (!rows.length) return;
+            
+            var colsLast = $(rows[rows.length-1]).children();
+            if (colsLast.length != 4) return;
+            
+            $(colsLast[3]).append(btnAdd);
+        };
+        
+        if (!$('.inputModalSendAddress').length)
+        {
+            $( ".tableSendAddressGroup" ).append($("<tr class='"+rowID+"'></tr>").append(
+                $("<td></td>").append(inputAddr),
+                $("<td></td>").append(inputAmount),
+                $("<td></td>"),
+                $("<td></td>").append(btnAdd)));
+        }
+        else
+            $( ".tableSendAddressGroup" ).append($("<tr class='"+rowID+"'></tr>").append(
+                $("<td></td>").append(inputAddr),
+                $("<td></td>").append(inputAmount),
+                $("<td></td>").append(btnDel),
+                $("<td></td>").append(btnAdd)));
+    }
+    
+    AddNewAddress();
+})
+},{"./utils.js":336}],335:[function(require,module,exports){
 'use strict';
 
 const bitcoin = require('bitcoinjs-lib');
@@ -39226,7 +39505,6 @@ const $ = require('jquery');
 
 exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
 {
-    $('.spanModalSendAddress')[0].textContent = address;
     $('#inputModalSendAddressLabel').val(strLabel);
     $('#spanModalAmountCoinName').text(strCoinShortName);
     $('#spanModalFeeCoinName').text(strCoinShortName);
@@ -39234,7 +39512,7 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
             
     $('#inputModalSendNetwork').val(network);
     
-    $( "#inputModalSendAmount" ).on('input', function() {
+   /* $( "#inputModalSendAmount" ).on('input', function() {
         var sendAmount = parseFloat($( this ).val());
         if (isNaN(sendAmount))
             sendAmount = 0.0;
@@ -39244,7 +39522,7 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
             sendFee = 0.0;
                 
         $('#spanModalBalance').text(utils.getSavedBalance(network)-sendAmount-sendFee+" " + strCoinShortName);
-    });
+    });*/
             
     $( "#inputModalSendFee" ).on('input', function() {
         var sendFee = parseFloat($( this ).val());
@@ -39268,10 +39546,12 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
     $('#spanModalBalance').text(utils.getSavedBalance(network)-sendAmount-sendFee+" " + strCoinShortName);
                 
     jQuery('#send_coins_to').modal('show');
+   
+    $('.inputModalSendAddress')[0].value = address;
 };
 
 $('#btnSendCoinsReady').click(function () {
-    const addressSendTo = $('.spanModalSendAddress')[0].textContent;
+    const addressSendTo = $('.inputModalSendAddress')[0].value;
     const password = $('#inputSendMoneyPassword').val();
     
     if (utils.getSavedEncodePassword().length && !utils.isValidEncodePassword(password))
@@ -39316,7 +39596,7 @@ $('#btnSendCoinsReady').click(function () {
         if (data.status.localeCompare('success') != 0)
             return;
         
-        const networkCurrent = bitcoin.networks[utils.coinsInfo[network][0]];
+        const networkCurrent = bitcoin.networks[utils.coinsInfo[network].name];
         
         var new_transaction = new bitcoin.TransactionBuilder(networkCurrent);
         
@@ -39400,7 +39680,7 @@ $('#btnSendCoinsReady').click(function () {
         utils.pushTransaction(network, new_transaction.build().toHex());
     });
 });
-},{"./utils.js":332,"bitcoinjs-lib":315,"jquery":326}],332:[function(require,module,exports){
+},{"./utils.js":336,"bitcoinjs-lib":315,"jquery":326}],336:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -39408,14 +39688,14 @@ const crypto = require('crypto');
 const Bip38 = require('bip38');
 const base58 = require('./base58');
 const bitcoin = require('bitcoinjs-lib');
-const alerts = require('./alerts');
+//const alerts = require('./alerts');
 const $ = require('jquery');
 
 exports.coinsInfo = {
-        0x00 : ['bitcoin', "https://btc.blockr.io/api/v1/address/", "?confirmations=0", "BTC", "https://btc.blockr.io/api/v1/tx/push"],
-        0x30 : ['litecoin', "https://ltc.blockr.io/api/v1/address/", "?confirmations=0", "LTC", "https://ltc.blockr.io/api/v1/tx/push"],
+        0x00 : require("./coinAPI/bitcoin"), //['bitcoin', "https://btc.blockr.io/api/v1/address/", "?confirmations=0", "BTC", "https://btc.blockr.io/api/v1/tx/push"],
+        0x30 : require("./coinAPI/litecoin"), //['litecoin', "https://ltc.blockr.io/api/v1/address/", "?confirmations=0", "LTC", "https://ltc.blockr.io/api/v1/tx/push"],
        // 0x1e : ['dogecoin', "https://dogechain.info/api/v1/", "?confirmations=0", "DOGE", "https://btc.blockr.io/api/v1/tx/push"],
-        0x6f : ['testnet', "https://tbtc.blockr.io/api/v1/address/", "?confirmations=0", "TBTC", "https://tbtc.blockr.io/api/v1/tx/push"]
+        0x6f : require("./coinAPI/bitcoin_test") //['testnet', "https://tbtc.blockr.io/api/v1/address/", "?confirmations=0", "TBTC", "https://tbtc.blockr.io/api/v1/tx/push"]
     };
 
 exports.scryptParams = {
@@ -39426,7 +39706,7 @@ exports.scryptParams = {
 
 exports.getBIP38 = function(networkID)
 {
-    const network = bitcoin.networks[exports.coinsInfo[networkID][0]];
+    const network = bitcoin.networks[exports.coinsInfo[networkID].name];
         
     var bip38 = new Bip38();
     bip38.versions = {
@@ -39668,24 +39948,22 @@ exports.updateTransactions = function(callback)
 
 exports.getBalance = function(netID, arrayAddr, callback)
 {
-   // var url = exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2];
-   // if (netID == 0x1e) //DOGE
-   //     exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2];
-   // 
-    console.log('get balance ' + exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2]);
+/*    console.log('get balance ' + exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2]);
     
     $.getJSON( exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2], function(data) {
         callback(data);
     })
       .fail(function() {
           callback(exports.JSONreturn(false, 'error'));
-      });      
+      });  */ 
+      
+    exports.coinsInfo[netID].getBalance(arrayAddr, callback);
 
 };
 
 exports.pushTransaction = function(netID, hexTX)
 {
-    console.log('pushTransaction' + hexTX);
+/*    console.log('pushTransaction' + hexTX);
    // alert(hexTX)
     $.post( exports.coinsInfo[netID][4], { "hex": hexTX })
       .done(function( data ) {
@@ -39695,12 +39973,13 @@ exports.pushTransaction = function(netID, hexTX)
       .fail(function(e) {
         //alert( "error " + JSON.stringify(e));
         alerts.OnTransactionSent(e);
-      });   
+      });   */
+    exports.coinsInfo[netID].pushTransaction(hexTX);
 };
 
 exports.getTransactions = function(netID, arrayAddr, callback)
 {
-    $.getJSON( exports.coinsInfo[netID][1] + "txs/" + arrayAddr.toString(), function(data) {
+   /* $.getJSON( exports.coinsInfo[netID][1] + "txs/" + arrayAddr.toString(), function(data) {
         callback(netID, data.data);
         
         $.getJSON( exports.coinsInfo[netID][1] + "unconfirmed/" + arrayAddr.toString(), function(data2) {
@@ -39710,20 +39989,21 @@ exports.getTransactions = function(netID, arrayAddr, callback)
         });      
     }).fail(function() {
         callback(netID, exports.JSONreturn(false, 'error'));
-    });   
-    
-}
+    });   */
+    exports.coinsInfo[netID].getTransactions(arrayAddr, callback);
+};
 
 exports.getUnspentTransactions = function(netID, arrayAddr, callback)
 {
-    console.log('getUnspentTransactions: ' + exports.coinsInfo[netID][1] + "unspent/" + arrayAddr.toString());
+   /* console.log('getUnspentTransactions: ' + exports.coinsInfo[netID][1] + "unspent/" + arrayAddr.toString());
     $.getJSON( exports.coinsInfo[netID][1] + "unspent/" + arrayAddr.toString(), function(data) {
         callback(netID, data);
     })
       .fail(function() {
           callback(netID, exports.JSONreturn(false, 'error'));
-      });      
-}
+      });   */   
+    exports.coinsInfo[netID].getUnspentTransactions(arrayAddr, callback);
+};
 
 exports.getItem = function (key)
 {
@@ -39800,5 +40080,5 @@ exports.ShowSpinner = function()
     $('#page-preloader').show();
 };
 }).call(this,require("buffer").Buffer)
-},{"./alerts":327,"./base58":329,"bip38":223,"bitcoinjs-lib":315,"buffer":3,"crypto":7,"jquery":326}]},{},[330])(330)
+},{"./base58":329,"./coinAPI/bitcoin":330,"./coinAPI/bitcoin_test":331,"./coinAPI/litecoin":332,"bip38":223,"bitcoinjs-lib":315,"buffer":3,"crypto":7,"jquery":326}]},{},[333,334])(334)
 });

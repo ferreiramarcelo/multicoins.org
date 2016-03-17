@@ -6,7 +6,6 @@ const $ = require('jquery');
 
 exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
 {
-    $('.spanModalSendAddress')[0].textContent = address;
     $('#inputModalSendAddressLabel').val(strLabel);
     $('#spanModalAmountCoinName').text(strCoinShortName);
     $('#spanModalFeeCoinName').text(strCoinShortName);
@@ -14,7 +13,7 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
             
     $('#inputModalSendNetwork').val(network);
     
-    $( "#inputModalSendAmount" ).on('input', function() {
+   /* $( "#inputModalSendAmount" ).on('input', function() {
         var sendAmount = parseFloat($( this ).val());
         if (isNaN(sendAmount))
             sendAmount = 0.0;
@@ -24,7 +23,7 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
             sendFee = 0.0;
                 
         $('#spanModalBalance').text(utils.getSavedBalance(network)-sendAmount-sendFee+" " + strCoinShortName);
-    });
+    });*/
             
     $( "#inputModalSendFee" ).on('input', function() {
         var sendFee = parseFloat($( this ).val());
@@ -48,10 +47,12 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
     $('#spanModalBalance').text(utils.getSavedBalance(network)-sendAmount-sendFee+" " + strCoinShortName);
                 
     jQuery('#send_coins_to').modal('show');
+   
+    $('.inputModalSendAddress')[0].value = address;
 };
 
 $('#btnSendCoinsReady').click(function () {
-    const addressSendTo = $('.spanModalSendAddress')[0].textContent;
+    const addressSendTo = $('.inputModalSendAddress')[0].value;
     const password = $('#inputSendMoneyPassword').val();
     
     if (utils.getSavedEncodePassword().length && !utils.isValidEncodePassword(password))
@@ -96,7 +97,7 @@ $('#btnSendCoinsReady').click(function () {
         if (data.status.localeCompare('success') != 0)
             return;
         
-        const networkCurrent = bitcoin.networks[utils.coinsInfo[network][0]];
+        const networkCurrent = bitcoin.networks[utils.coinsInfo[network].name];
         
         var new_transaction = new bitcoin.TransactionBuilder(networkCurrent);
         

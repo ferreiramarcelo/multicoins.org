@@ -4,14 +4,14 @@ const crypto = require('crypto');
 const Bip38 = require('bip38');
 const base58 = require('./base58');
 const bitcoin = require('bitcoinjs-lib');
-const alerts = require('./alerts');
+//const alerts = require('./alerts');
 const $ = require('jquery');
 
 exports.coinsInfo = {
-        0x00 : ['bitcoin', "https://btc.blockr.io/api/v1/address/", "?confirmations=0", "BTC", "https://btc.blockr.io/api/v1/tx/push"],
-        0x30 : ['litecoin', "https://ltc.blockr.io/api/v1/address/", "?confirmations=0", "LTC", "https://ltc.blockr.io/api/v1/tx/push"],
+        0x00 : require("./coinAPI/bitcoin"), //['bitcoin', "https://btc.blockr.io/api/v1/address/", "?confirmations=0", "BTC", "https://btc.blockr.io/api/v1/tx/push"],
+        0x30 : require("./coinAPI/litecoin"), //['litecoin', "https://ltc.blockr.io/api/v1/address/", "?confirmations=0", "LTC", "https://ltc.blockr.io/api/v1/tx/push"],
        // 0x1e : ['dogecoin', "https://dogechain.info/api/v1/", "?confirmations=0", "DOGE", "https://btc.blockr.io/api/v1/tx/push"],
-        0x6f : ['testnet', "https://tbtc.blockr.io/api/v1/address/", "?confirmations=0", "TBTC", "https://tbtc.blockr.io/api/v1/tx/push"]
+        0x6f : require("./coinAPI/bitcoin_test") //['testnet', "https://tbtc.blockr.io/api/v1/address/", "?confirmations=0", "TBTC", "https://tbtc.blockr.io/api/v1/tx/push"]
     };
 
 exports.scryptParams = {
@@ -22,7 +22,7 @@ exports.scryptParams = {
 
 exports.getBIP38 = function(networkID)
 {
-    const network = bitcoin.networks[exports.coinsInfo[networkID][0]];
+    const network = bitcoin.networks[exports.coinsInfo[networkID].name];
         
     var bip38 = new Bip38();
     bip38.versions = {
@@ -264,62 +264,23 @@ exports.updateTransactions = function(callback)
 
 exports.getBalance = function(netID, arrayAddr, callback)
 {
-   // var url = exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2];
-   // if (netID == 0x1e) //DOGE
-   //     exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2];
-   // 
-    console.log('get balance ' + exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2]);
-    
-    $.getJSON( exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2], function(data) {
-        callback(data);
-    })
-      .fail(function() {
-          callback(exports.JSONreturn(false, 'error'));
-      });      
-
+    exports.coinsInfo[netID].getBalance(arrayAddr, callback);
 };
 
 exports.pushTransaction = function(netID, hexTX)
 {
-    console.log('pushTransaction' + hexTX);
-   // alert(hexTX)
-    $.post( exports.coinsInfo[netID][4], { "hex": hexTX })
-      .done(function( data ) {
-        //alert( "Data Loaded: " + JSON.stringify(data) );
-        alerts.OnTransactionSent(data);
-      })
-      .fail(function(e) {
-        //alert( "error " + JSON.stringify(e));
-        alerts.OnTransactionSent(e);
-      });   
+    exports.coinsInfo[netID].pushTransaction(hexTX);
 };
 
 exports.getTransactions = function(netID, arrayAddr, callback)
 {
-    $.getJSON( exports.coinsInfo[netID][1] + "txs/" + arrayAddr.toString(), function(data) {
-        callback(netID, data.data);
-        
-        $.getJSON( exports.coinsInfo[netID][1] + "unconfirmed/" + arrayAddr.toString(), function(data2) {
-            callback(netID, data2.data);
-        }).fail(function() {
-            callback(netID, exports.JSONreturn(false, 'error'));
-        });      
-    }).fail(function() {
-        callback(netID, exports.JSONreturn(false, 'error'));
-    });   
-    
-}
+    exports.coinsInfo[netID].getTransactions(arrayAddr, callback);
+};
 
 exports.getUnspentTransactions = function(netID, arrayAddr, callback)
 {
-    console.log('getUnspentTransactions: ' + exports.coinsInfo[netID][1] + "unspent/" + arrayAddr.toString());
-    $.getJSON( exports.coinsInfo[netID][1] + "unspent/" + arrayAddr.toString(), function(data) {
-        callback(netID, data);
-    })
-      .fail(function() {
-          callback(netID, exports.JSONreturn(false, 'error'));
-      });      
-}
+    exports.coinsInfo[netID].getUnspentTransactions(arrayAddr, callback);
+};
 
 exports.getItem = function (key)
 {

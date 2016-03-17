@@ -429,17 +429,29 @@
           <div class="modal-body">
             <form class="form-horizontal">
               <input type="hidden" id="inputModalSendNetwork">
-              <div class="form-group">
-                <label for="spanModalSendAddress" class="col-sm-2 control-label">Address</label>
-                <div class="display-table col-sm-9">
-                  <span class="form-control spanModalSendAddress"></span>
-                  <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                  </span>
-                  <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
-                  </span>
-                </div>
+              <div class="divSendAddressGroup">
+                <table class="table table-striped table-bordered ">
+                  <thead>
+                    <th class="col-md-7">Address</th>
+                    <th class="col-md-3">Amount</th>
+                    <th class="col-md-1"></th>
+                    <th class="col-md-1"></th>
+                  </thead>
+                  <tbody class="tableSendAddressGroup">
+                  </tbody>
+                </table>
+                <!--<div class="divSendAddressGroupItem">
+                  <label for="inputModalSendAddress" class="col-sm-2 control-label">Address</label>
+                  <div class="display-table col-sm-9 divModalSendAddress">
+                    <!--<input type="text" class="form-control inputModalSendAddress">
+                    <span class="input-group-btn buttonDeleteAddressForSendTo">
+                      <button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                    </span>
+                    <span class="input-group-btn buttonPlusAddressForSendTo">
+                      <button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                    </span>
+                  </div>
+                </div>-->
               </div>
              <!-- <div class="form-group">
                 <label for="inputModalSendAddressLabel" class="col-sm-2 control-label">Label</label>
@@ -447,13 +459,13 @@
                   <input type="text" class="form-control" id="inputModalSendAddressLabel">
                 </div>
               </div>-->
-              <div class="form-group">
+              <!--<div class="form-group">
                 <label for="inputModalSendAmount" class="col-sm-2 control-label">Amount</label>
                 <div class="col-sm-4 display-table">
                   <input type="text" class="form-control" id="inputModalSendAmount" placeholder="0.0">
                   <span id='spanModalAmountCoinName' class="input-group-addon"></span>
                 </div>
-              </div>
+              </div>-->
               <div class="form-group">
                 <label for="inputModalSendFee" class="col-sm-2 control-label">Fee</label>
                 <div class="col-sm-4 display-table">
@@ -622,7 +634,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script src="js/wallet_loader.js"></script>
-    <!--<script src='/js/wallet.js'></script>-->
+    <!--<script src="js/wallet_loader.js"></script>-->
+    <script src='/js/wallet.js'></script>
   </body>
 </html>
