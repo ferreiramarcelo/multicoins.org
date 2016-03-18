@@ -235,6 +235,10 @@ $('#tab_trade_top a').click(function () {
     {
         utils.updateTransactions(app.UpdateTransactionsTableHTML);
     }
+    if (this.hash.localeCompare('#tab_request_money') == 0)
+    {
+        app.RefreshKeyPairsBalance();
+    }
 });
 
 

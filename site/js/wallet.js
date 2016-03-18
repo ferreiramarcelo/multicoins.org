@@ -38670,24 +38670,6 @@ exports.UpdateTransactionsTableHTML = function()
         return new Date(tx2.transaction.time_utc).getTime() - new Date(tx1.transaction.time_utc).getTime();
     });
     
-   /*arrayTXs.forEach(function(tx) {
-        const tdCoin = $("<td>"+ tx.network+"</td>");
-        const tdStatus = $("<td>" + tx.transaction.confirmations + "</td>");
-        const tdDate = $("<td>" + tx.transaction.time_utc + "</td>");
-        const tdDescription = $("<td>" + tx.transaction.tx + "</td>");
-
-        var tdAmountClass = 'success';
-        if (parseFloat(tx.transaction.amount) < 0)
-            tdAmountClass = 'danger';
-            
-        const tdAmount = $("<td class='"+tdAmountClass+"'>"+ tx.transaction.amount + "</td>");
-                
-
-        $( "#transactions" ).append($("<tr></tr>").append(
-            tdCoin, tdStatus, tdDate, tdDescription, tdAmount ));
-        
-    });*/
-    
     var groupTXs = {};
     arrayTXs.forEach(function(tx) {
         if (groupTXs[tx.transaction.tx])
@@ -38796,6 +38778,7 @@ exports.RefreshKeyPairsBalance = function()
     for (var keyHash in pairs)
     {
         utils.getBalance(keyHash, pairs[keyHash], function(data) {
+            
             if (data.status.localeCompare('success') != 0)
                 return;
                 
@@ -38812,7 +38795,7 @@ exports.RefreshKeyPairsBalance = function()
     }
 };
 
-},{"./alerts":327,"./sendTransaction":335,"./utils.js":336,"crypto":7,"jquery":326}],329:[function(require,module,exports){
+},{"./alerts":327,"./sendTransaction":336,"./utils.js":337,"crypto":7,"jquery":326}],329:[function(require,module,exports){
 
 // 3rd party
 var int = require('int');
@@ -38890,7 +38873,6 @@ exports.Shortname = "BTC";
 exports.getBalance = function(arrayAddr, callback)
 {
     console.log('get balance ' + urlAPI + "balance/" + arrayAddr.toString() + "?confirmations=0");
-    
     $.getJSON( urlAPI + "balance/" + arrayAddr.toString() + "?confirmations=0", function(data) {
         callback(data);
     })
@@ -38902,14 +38884,11 @@ exports.getBalance = function(arrayAddr, callback)
 exports.pushTransaction = function(hexTX)
 {
     console.log('pushTransaction' + hexTX);
-   // alert(hexTX)
     $.post( urlAPIpush, { "hex": hexTX })
       .done(function( data ) {
-        //alert( "Data Loaded: " + JSON.stringify(data) );
         alerts.OnTransactionSent(data);
       })
       .fail(function(e) {
-        //alert( "error " + JSON.stringify(e));
         alerts.OnTransactionSent(e);
       });   
 };
@@ -38941,7 +38920,7 @@ exports.getUnspentTransactions = function(arrayAddr, callback)
       });      
 }
 
-},{"../alerts":327,"../utils.js":336,"jquery":326}],331:[function(require,module,exports){
+},{"../alerts":327,"../utils.js":337,"jquery":326}],331:[function(require,module,exports){
 'use strict';
 
 const utils = require('../utils.js');
@@ -39009,7 +38988,118 @@ exports.getUnspentTransactions = function(arrayAddr, callback)
       });      
 }
 
-},{"../alerts":327,"../utils.js":336,"jquery":326}],332:[function(require,module,exports){
+},{"../alerts":327,"../utils.js":337,"jquery":326}],332:[function(require,module,exports){
+'use strict';
+
+const utils = require('../utils.js');
+const alerts = require('../alerts');
+const $ = require('jquery');
+
+//eb9e796f9a84f5c79e7fc59600bc3877
+const token = '?token=eb9e796f9a84f5c79e7fc59600bc3877';
+
+exports.netID = 0x1e;
+exports.name = "dogecoin";
+exports.Shortname = "DOGE";
+
+exports.getBalance = function(arrayAddr, callback)
+{
+    var addrs = "";
+    arrayAddr.forEach(function(addr, i, array) {
+        if (i < array.length-1) addrs += addr + ";";
+        else addrs += addr;
+    });
+    
+    $.getJSON( 'https://api.blockcypher.com/v1/doge/main/addrs/'+addrs+'/balance' + token, function(data) {
+        data = [].concat(data);
+        data.forEach(function(element) {
+            element.balance = (parseFloat(element.balance)/100000000.0).toFixed(8);
+        });
+        callback({status: 'success', data: data});
+    })
+    .fail(function() {
+        callback(utils.JSONreturn(false, 'error'));
+    });      
+
+};
+
+exports.pushTransaction = function(hexTX)
+{
+    var pushtx = {
+      tx: hexTX
+    };
+//    console.log('pushTransaction' + hexTX);
+ //   alert(hexTX)
+    $.post( 'https://api.blockcypher.com/v1/doge/main/txs/push', JSON.stringify(pushtx))
+      .done(function( data ) {
+        //alert( "Data Loaded: " + JSON.stringify(data) );
+        alerts.OnTransactionSent({status: 'success', data: data.tx.hash});
+      })
+      .fail(function(e) {
+        //alert( "error " + JSON.stringify(e));
+        alerts.OnTransactionSent(e);
+      });   
+};
+
+exports.getTransactions = function(arrayAddr, callback)
+{
+    var addrs = "";
+    arrayAddr.forEach(function(addr, i, array) {
+        if (i < array.length-1) addrs += addr + ";";
+        else addrs += addr;
+    });
+
+    $.getJSON( 'https://api.blockcypher.com/v1/doge/main/addrs/'+addrs + token, function(data) {
+        data = [].concat(data);
+        data.forEach(function(element) {
+            element.balance = (parseFloat(element.balance)/100000000.0).toFixed(8);
+            element.txs = element.txrefs || [];
+            element.txs.forEach(function(tx) {
+                tx.tx = tx.tx_hash;
+                tx.time_utc = tx.confirmed;
+                tx.amount = (parseFloat(tx.value)/100000000.0).toFixed(8);
+                if (tx.tx_output_n < 0)
+                    tx.amount = -1.0*tx.amount;
+            });
+        });
+        callback(exports.netID, data);
+        
+        /*$.getJSON( urlAPI + "unconfirmed/" + arrayAddr.toString(), function(data2) {
+            callback(exports.netID, data2.data);
+        }).fail(function() {
+            callback(exports.netID, utils.JSONreturn(false, 'error'));
+        }); */     
+    }).fail(function() {
+        callback(exports.netID, utils.JSONreturn(false, 'error'));
+    });   
+    
+}
+
+exports.getUnspentTransactions = function(arrayAddr, callback)
+{
+    var addrs = "";
+    arrayAddr.forEach(function(addr, i, array) {
+        if (i < array.length-1) addrs += addr + ";";
+        else addrs += addr;
+    });
+
+    $.getJSON( 'https://api.blockcypher.com/v1/doge/main/addrs/'+addrs + token + '&unspentOnly=true', function(data) {
+        data = [].concat(data);
+        data.forEach(function(element) {
+            element.unspent = element.txrefs || [];
+            element.unspent.forEach(function(tx) {
+                tx.tx = tx.tx_hash;    
+                tx.amount = (parseFloat(tx.value)/100000000.0).toFixed(8);
+                tx.n = tx.tx_output_n;
+            });
+        }); 
+        callback(exports.netID, {status: 'success', data: data});
+    }).fail(function() {
+        callback(exports.netID, utils.JSONreturn(false, 'error'));    
+    });
+};
+
+},{"../alerts":327,"../utils.js":337,"jquery":326}],333:[function(require,module,exports){
 'use strict';
 
 const utils = require('../utils.js');
@@ -39077,7 +39167,7 @@ exports.getUnspentTransactions = function(arrayAddr, callback)
       });      
 }
 
-},{"../alerts":327,"../utils.js":336,"jquery":326}],333:[function(require,module,exports){
+},{"../alerts":327,"../utils.js":337,"jquery":326}],334:[function(require,module,exports){
 'use strict';
 
 const app = require('./app');
@@ -39315,6 +39405,10 @@ $('#tab_trade_top a').click(function () {
     {
         utils.updateTransactions(app.UpdateTransactionsTableHTML);
     }
+    if (this.hash.localeCompare('#tab_request_money') == 0)
+    {
+        app.RefreshKeyPairsBalance();
+    }
 });
 
 
@@ -39421,7 +39515,7 @@ $('#toolButtonSaveWallet').click(function () {
 
 
 //browserify ~/workspace/server_side/htmlEvents.js ~/workspace/server_side/modalEvents.js | uglifyjs -s htmlEvents > ~/workspace/site/js/wallet.js
-},{"./alerts":327,"./app":328,"./utils.js":336,"bitcoinjs-lib":315,"crypto":7,"firebase":324,"jquery":326}],334:[function(require,module,exports){
+},{"./alerts":327,"./app":328,"./utils.js":337,"bitcoinjs-lib":315,"crypto":7,"firebase":324,"jquery":326}],335:[function(require,module,exports){
 'use strict';
 
 //const alerts = require('./alerts');
@@ -39496,7 +39590,7 @@ $('#send_coins_to').on('show.bs.modal', function () {
     
     AddNewAddress();
 })
-},{"./utils.js":336}],335:[function(require,module,exports){
+},{"./utils.js":337}],336:[function(require,module,exports){
 'use strict';
 
 const bitcoin = require('bitcoinjs-lib');
@@ -39680,7 +39774,7 @@ $('#btnSendCoinsReady').click(function () {
         utils.pushTransaction(network, new_transaction.build().toHex());
     });
 });
-},{"./utils.js":336,"bitcoinjs-lib":315,"jquery":326}],336:[function(require,module,exports){
+},{"./utils.js":337,"bitcoinjs-lib":315,"jquery":326}],337:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -39694,7 +39788,7 @@ const $ = require('jquery');
 exports.coinsInfo = {
         0x00 : require("./coinAPI/bitcoin"), //['bitcoin', "https://btc.blockr.io/api/v1/address/", "?confirmations=0", "BTC", "https://btc.blockr.io/api/v1/tx/push"],
         0x30 : require("./coinAPI/litecoin"), //['litecoin', "https://ltc.blockr.io/api/v1/address/", "?confirmations=0", "LTC", "https://ltc.blockr.io/api/v1/tx/push"],
-       // 0x1e : ['dogecoin', "https://dogechain.info/api/v1/", "?confirmations=0", "DOGE", "https://btc.blockr.io/api/v1/tx/push"],
+        0x1e : require("./coinAPI/dogecoin"), //['dogecoin', "https://dogechain.info/api/v1/", "?confirmations=0", "DOGE", "https://btc.blockr.io/api/v1/tx/push"],
         0x6f : require("./coinAPI/bitcoin_test") //['testnet', "https://tbtc.blockr.io/api/v1/address/", "?confirmations=0", "TBTC", "https://tbtc.blockr.io/api/v1/tx/push"]
     };
 
@@ -39871,7 +39965,7 @@ exports.updateTransactions = function(callback)
         return;
     }
     
-    var coins = {}; //{0x00 : [], 0x30 : [], 0x1e : [], 0x6f : []};
+    var coins = {}; 
     for (var key in exports.coinsInfo)
         coins[key] = [];
 
@@ -39948,60 +40042,21 @@ exports.updateTransactions = function(callback)
 
 exports.getBalance = function(netID, arrayAddr, callback)
 {
-/*    console.log('get balance ' + exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2]);
-    
-    $.getJSON( exports.coinsInfo[netID][1] + "balance/" + arrayAddr.toString() + exports.coinsInfo[netID][2], function(data) {
-        callback(data);
-    })
-      .fail(function() {
-          callback(exports.JSONreturn(false, 'error'));
-      });  */ 
-      
     exports.coinsInfo[netID].getBalance(arrayAddr, callback);
-
 };
 
 exports.pushTransaction = function(netID, hexTX)
 {
-/*    console.log('pushTransaction' + hexTX);
-   // alert(hexTX)
-    $.post( exports.coinsInfo[netID][4], { "hex": hexTX })
-      .done(function( data ) {
-        //alert( "Data Loaded: " + JSON.stringify(data) );
-        alerts.OnTransactionSent(data);
-      })
-      .fail(function(e) {
-        //alert( "error " + JSON.stringify(e));
-        alerts.OnTransactionSent(e);
-      });   */
     exports.coinsInfo[netID].pushTransaction(hexTX);
 };
 
 exports.getTransactions = function(netID, arrayAddr, callback)
 {
-   /* $.getJSON( exports.coinsInfo[netID][1] + "txs/" + arrayAddr.toString(), function(data) {
-        callback(netID, data.data);
-        
-        $.getJSON( exports.coinsInfo[netID][1] + "unconfirmed/" + arrayAddr.toString(), function(data2) {
-            callback(netID, data2.data);
-        }).fail(function() {
-            callback(netID, exports.JSONreturn(false, 'error'));
-        });      
-    }).fail(function() {
-        callback(netID, exports.JSONreturn(false, 'error'));
-    });   */
     exports.coinsInfo[netID].getTransactions(arrayAddr, callback);
 };
 
 exports.getUnspentTransactions = function(netID, arrayAddr, callback)
 {
-   /* console.log('getUnspentTransactions: ' + exports.coinsInfo[netID][1] + "unspent/" + arrayAddr.toString());
-    $.getJSON( exports.coinsInfo[netID][1] + "unspent/" + arrayAddr.toString(), function(data) {
-        callback(netID, data);
-    })
-      .fail(function() {
-          callback(netID, exports.JSONreturn(false, 'error'));
-      });   */   
     exports.coinsInfo[netID].getUnspentTransactions(arrayAddr, callback);
 };
 
@@ -40027,7 +40082,7 @@ exports.getItem = function (key)
 
 exports.setItem = function (key, value)
 {
-    console.log('setItem key='+key+'; value='+JSON.stringify(value));
+    //console.log('setItem key='+key+'; value='+JSON.stringify(value));
     var oldValue = exports.getItem(key);
     
     oldValue.status = 'success';
@@ -40080,5 +40135,5 @@ exports.ShowSpinner = function()
     $('#page-preloader').show();
 };
 }).call(this,require("buffer").Buffer)
-},{"./base58":329,"./coinAPI/bitcoin":330,"./coinAPI/bitcoin_test":331,"./coinAPI/litecoin":332,"bip38":223,"bitcoinjs-lib":315,"buffer":3,"crypto":7,"jquery":326}]},{},[333,334])(334)
+},{"./base58":329,"./coinAPI/bitcoin":330,"./coinAPI/bitcoin_test":331,"./coinAPI/dogecoin":332,"./coinAPI/litecoin":333,"bip38":223,"bitcoinjs-lib":315,"buffer":3,"crypto":7,"jquery":326}]},{},[334,335])(335)
 });

@@ -262,24 +262,6 @@ exports.UpdateTransactionsTableHTML = function()
         return new Date(tx2.transaction.time_utc).getTime() - new Date(tx1.transaction.time_utc).getTime();
     });
     
-   /*arrayTXs.forEach(function(tx) {
-        const tdCoin = $("<td>"+ tx.network+"</td>");
-        const tdStatus = $("<td>" + tx.transaction.confirmations + "</td>");
-        const tdDate = $("<td>" + tx.transaction.time_utc + "</td>");
-        const tdDescription = $("<td>" + tx.transaction.tx + "</td>");
-
-        var tdAmountClass = 'success';
-        if (parseFloat(tx.transaction.amount) < 0)
-            tdAmountClass = 'danger';
-            
-        const tdAmount = $("<td class='"+tdAmountClass+"'>"+ tx.transaction.amount + "</td>");
-                
-
-        $( "#transactions" ).append($("<tr></tr>").append(
-            tdCoin, tdStatus, tdDate, tdDescription, tdAmount ));
-        
-    });*/
-    
     var groupTXs = {};
     arrayTXs.forEach(function(tx) {
         if (groupTXs[tx.transaction.tx])
@@ -388,6 +370,7 @@ exports.RefreshKeyPairsBalance = function()
     for (var keyHash in pairs)
     {
         utils.getBalance(keyHash, pairs[keyHash], function(data) {
+            
             if (data.status.localeCompare('success') != 0)
                 return;
                 

@@ -10,7 +10,7 @@ const $ = require('jquery');
 exports.coinsInfo = {
         0x00 : require("./coinAPI/bitcoin"), //['bitcoin', "https://btc.blockr.io/api/v1/address/", "?confirmations=0", "BTC", "https://btc.blockr.io/api/v1/tx/push"],
         0x30 : require("./coinAPI/litecoin"), //['litecoin', "https://ltc.blockr.io/api/v1/address/", "?confirmations=0", "LTC", "https://ltc.blockr.io/api/v1/tx/push"],
-       // 0x1e : ['dogecoin', "https://dogechain.info/api/v1/", "?confirmations=0", "DOGE", "https://btc.blockr.io/api/v1/tx/push"],
+        0x1e : require("./coinAPI/dogecoin"), //['dogecoin', "https://dogechain.info/api/v1/", "?confirmations=0", "DOGE", "https://btc.blockr.io/api/v1/tx/push"],
         0x6f : require("./coinAPI/bitcoin_test") //['testnet', "https://tbtc.blockr.io/api/v1/address/", "?confirmations=0", "TBTC", "https://tbtc.blockr.io/api/v1/tx/push"]
     };
 
@@ -187,7 +187,7 @@ exports.updateTransactions = function(callback)
         return;
     }
     
-    var coins = {}; //{0x00 : [], 0x30 : [], 0x1e : [], 0x6f : []};
+    var coins = {}; 
     for (var key in exports.coinsInfo)
         coins[key] = [];
 
@@ -304,7 +304,7 @@ exports.getItem = function (key)
 
 exports.setItem = function (key, value)
 {
-    console.log('setItem key='+key+'; value='+JSON.stringify(value));
+    //console.log('setItem key='+key+'; value='+JSON.stringify(value));
     var oldValue = exports.getItem(key);
     
     oldValue.status = 'success';
