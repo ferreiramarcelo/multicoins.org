@@ -48,11 +48,12 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
                 
     jQuery('#send_coins_to').modal('show');
    
-    $('.inputModalSendAddress')[0].value = address;
+//    $('.inputModalSendAddress')[0].textContent = address;
+//    $('.ulAddress')[0].innerHTML = '';
 };
 
 $('#btnSendCoinsReady').click(function () {
-    const addressSendTo = $('.inputModalSendAddress')[0].value;
+    const addressSendTo = $('.spanAddressTo')[0].textContent;
     const password = $('#inputSendMoneyPassword').val();
     
     if (utils.getSavedEncodePassword().length && !utils.isValidEncodePassword(password))

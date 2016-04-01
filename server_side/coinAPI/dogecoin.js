@@ -32,7 +32,7 @@ exports.getBalance = function(arrayAddr, callback)
 
 };
 
-exports.pushTransaction = function(hexTX)
+exports.pushTransaction = function(hexTX, callback)
 {
     var pushtx = {
       tx: hexTX
@@ -41,8 +41,7 @@ exports.pushTransaction = function(hexTX)
  //   alert(hexTX)
     $.post( 'https://api.blockcypher.com/v1/doge/main/txs/push', JSON.stringify(pushtx))
       .done(function( data ) {
-        //alert( "Data Loaded: " + JSON.stringify(data) );
-        alerts.OnTransactionSent({status: 'success', data: data.tx.hash});
+        callback(utils.JSONreturn('success', {txHash: data.tx.hash}));
       })
       .fail(function(e) {
         //alert( "error " + JSON.stringify(e));
@@ -58,7 +57,7 @@ exports.getTransactions = function(arrayAddr, callback)
         else addrs += addr;
     });
 
-    $.getJSON( 'https://api.blockcypher.com/v1/doge/main/addrs/'+addrs + token, function(data) {
+    $.getJSON( 'https://api.blockcypher.com/v1/doge/main/addrs/'+addrs + token + "&confirmations=0", function(data) {
         data = [].concat(data);
         data.forEach(function(element) {
             element.balance = (parseFloat(element.balance)/100000000.0).toFixed(8);

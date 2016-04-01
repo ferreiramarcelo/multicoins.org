@@ -5,6 +5,47 @@ const utils = require('./utils.js');
 const $ = jQuery;
 
 var g_rowID = 0;
+
+function MakeInputAddress(network)
+{
+    var jsonSavedPublicKeys = utils.getItem("PublicKeys").value || {}; 
+
+    var aAddress = [];
+    for (var key in jsonSavedPublicKeys)
+    {
+        if (network.localeCompare(jsonSavedPublicKeys[key].network + "") != 0)
+            continue;
+            
+        aAddress.push(jsonSavedPublicKeys[key].address);
+    }
+    
+    if (aAddress.length == 0)
+        return "";
+        
+    var list = "";
+    aAddress.forEach(function(addr){
+        list += '<li><a href="#" class="aAddressToSendCoins">'+addr+'</a></li>';
+    });
+    
+    const idSpanAddress = "spanAddressTo" + g_rowID;
+    
+    var UL = $('<ul class="dropdown-menu " aria-labelledby="dropdownMenu'+g_rowID+'"></ul>').append(list);
+    UL.children().click(function() {
+        $('.'+idSpanAddress).text($(this).text());
+    });
+        
+    var ret = 
+            $('<div class="dropdown"></div>').append(
+                '<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu'+g_rowID+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">' + 
+                  '<span class="spanAddressTo '+idSpanAddress+'">' + aAddress[0] + '</span>' + 
+                  '<span class="caret"></span>' + 
+                '</button>', 
+                UL
+                )
+            ;
+    return ret;
+}
+
 $('#send_coins_to').on('show.bs.modal', function () {
     $('.tableSendAddressGroup').empty();
 
@@ -14,12 +55,7 @@ $('#send_coins_to').on('show.bs.modal', function () {
     {
         $('.buttonPlusAddressForSendTo').remove();
 
-        //var group = $(
-        //    '<div class="form-group divSendAddressGroupItem">'+
-        //        '<label for="inputModalSendAddress" class="col-sm-2 control-label">Address</label></div>');
-        //var container = $('<div class="display-table col-sm-9 divModalSendAddress"></div>');
-        
-        var inputAddr = $('<input type="text" class="form-control inputModalSendAddress">');
+        var inputAddr = MakeInputAddress(network); //$('<input type="text" class="form-control inputModalSendAddress">');
         
         var inputAmount = $('<input type="text" class="form-control" id="inputModalSendAmount" placeholder="0.0">');
         inputAmount[0].oninput = function() {
@@ -57,14 +93,14 @@ $('#send_coins_to').on('show.bs.modal', function () {
         if (!$('.inputModalSendAddress').length)
         {
             $( ".tableSendAddressGroup" ).append($("<tr class='"+rowID+"'></tr>").append(
-                $("<td></td>").append(inputAddr),
+                $("<td style='overflow: visible!important'></td>").append(inputAddr),
                 $("<td></td>").append(inputAmount),
                 $("<td></td>"),
                 $("<td></td>").append(btnAdd)));
         }
         else
             $( ".tableSendAddressGroup" ).append($("<tr class='"+rowID+"'></tr>").append(
-                $("<td></td>").append(inputAddr),
+                $("<td style='overflow: visible!important'></td>").append(inputAddr),
                 $("<td></td>").append(inputAmount),
                 $("<td></td>").append(btnDel),
                 $("<td></td>").append(btnAdd)));

@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const Bip38 = require('bip38');
 const base58 = require('./base58');
 const bitcoin = require('bitcoinjs-lib');
-//const alerts = require('./alerts');
+const alerts = require('./alerts');
 const $ = require('jquery');
 
 exports.coinsInfo = {
@@ -269,7 +269,16 @@ exports.getBalance = function(netID, arrayAddr, callback)
 
 exports.pushTransaction = function(netID, hexTX)
 {
-    exports.coinsInfo[netID].pushTransaction(hexTX);
+    exports.coinsInfo[netID].pushTransaction(hexTX, function(data) {
+        if (!data || !data.status || !data.message || !data.message.txHash)
+            return;
+            
+        alerts.OnTransactionSent({status: data.status, data: data.message.txHash});
+    
+        /*var jsonSavedTransactions = exports.getItem("KeyPairs").txs || {}; 
+        jsonSavedTransactions[data.message.txHash] = "{netID: '"+netID+"'}";
+        exports.setItem("KeyPairs", jsonSavedTransactions);*/
+    });
 };
 
 exports.getTransactions = function(netID, arrayAddr, callback)

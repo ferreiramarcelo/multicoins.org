@@ -27,24 +27,6 @@ body {
 
 .top-buffer { margin-top:20px; }
 
-/*#page-preloader {
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 100500;
-}
-
-#page-preloader .spinner {
-    width: 120px;
-    height: 120px;
-    position: absolute;
-    left: 50%;
-    top: 30%;
-    background: url('/images/spinner.gif') no-repeat 50% 50%;
-    margin: -16px 0 0 -16px;
-}*/
 .loader-info {
     position: absolute;
     left: 50%;

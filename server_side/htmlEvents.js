@@ -345,3 +345,5 @@ $('#toolButtonSaveWallet').click(function () {
 
 
 //browserify ~/workspace/server_side/htmlEvents.js ~/workspace/server_side/modalEvents.js | uglifyjs -s htmlEvents > ~/workspace/site/js/wallet.js
+
+//browserify --debug ~/workspace/server_side/htmlEvents.js ~/workspace/server_side/modalEvents.js -s htmlEvents > ~/workspace/site/js/wallet.js
