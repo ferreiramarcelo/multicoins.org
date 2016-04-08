@@ -1,5 +1,43 @@
 'use strict';
 
+exports.ModalDialog = function(id, title, body, onok)
+{
+  const ok_button = $('<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>');
+  const close_button = $('<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
+  
+  const footer = $('<div class="modal-footer"></div>');
+  if (onok) 
+  {
+    ok_button.click(function() {
+      onok();
+    });
+    footer.append(ok_button);
+  }
+  
+  footer.append(close_button);
+  
+  const $html = $(
+        '<div class="modal fade" id="'+id+'" tabindex="-1" role="dialog" aria-labelledby="'+id+'Label"></div>').append(
+          $('<div class="modal-dialog" role="document"></div>').append(
+            $('<div class="modal-content"></div>').append(
+              '<div class="modal-header">'+
+                '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                '<h4 class="modal-title" id="'+id+'Label">'+title+'</h4>'+
+              '</div>',
+              '<div class="modal-body">'+ body + '</div>',
+              footer
+            )
+          )
+  );
+    
+    $('#SimpleAlert').remove();
+    
+    $( "body" ).append($html);
+
+  
+    return jQuery('#' + id);
+};
+
 exports.OnTransactionSent = function(result)
 {
     var responce = result;
@@ -20,7 +58,11 @@ exports.OnTransactionSent = function(result)
     if (responce.message)
         message2 = responce.message;
     
-    const $html = $(
+    const id = "OnTransactionSent";
+    
+    exports.ModalDialog(id, title, '<div>'+message1 +'<br>'+message2+'<br>Note, that push TX has an active limit of 5 API requests per minute.</div>');
+    
+    /*const $html = $(
         '<div class="modal fade" id="OnTransactionSent" tabindex="-1" role="dialog" aria-labelledby="OnTransactionSentLabel">'+
           '<div class="modal-dialog" role="document">'+
             '<div class="modal-content">'+
@@ -41,23 +83,26 @@ exports.OnTransactionSent = function(result)
     
     $('#OnTransactionSent').remove();
     
-    $( "body" ).append($html);
+    $( "body" ).append($html);*/
     
     if (title == "Failed!")
     {
-        $('#OnTransactionSentLabel').addClass('');
+        $('#' + id + 'Label').addClass('');
     }
     
-    jQuery('#OnTransactionSent').modal('show');    
+    jQuery('#' + id).modal('show');    
 };
 
 exports.Alert = function(title, message)
 {
   const strTitle = title || "";
   const strMessage = message || "";
+  const id = "SimpleAlert";
   
-    const $html = $(
-        '<div class="modal fade" id="SimpleAlert" tabindex="-1" role="dialog" aria-labelledby="OnTransactionSentLabel">'+
+  exports.ModalDialog(id, strTitle, '<div>'+strMessage+'</div>');
+  
+  /*  const $html = $(
+        '<div class="modal fade" id="'+id+'" tabindex="-1" role="dialog" aria-labelledby="OnTransactionSentLabel">'+
           '<div class="modal-dialog" role="document">'+
             '<div class="modal-content">'+
               '<div class="modal-header">'+
@@ -77,8 +122,9 @@ exports.Alert = function(title, message)
     
     $('#SimpleAlert').remove();
     
-    $( "body" ).append($html);
+    $( "body" ).append($html);*/
     
-    jQuery('#SimpleAlert').modal('show');    
+    
+  jQuery('#' + id).modal('show');    
   
 }

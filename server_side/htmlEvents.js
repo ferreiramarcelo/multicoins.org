@@ -275,10 +275,10 @@ $('#btnNewKeyPairReady').click(function (e) {
     }
         
     const network = bitcoin.networks[$( "#add_new_keypair  input:checked" ).val()];
-    
+
     console.log('creating network: ' + network);
     const keyPair = bitcoin.ECPair.makeRandom({network : network});
-   
+    
     app.AddKeyPair(keyPair, password);
 });
 

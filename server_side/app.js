@@ -197,6 +197,9 @@ exports.UpdatePublicKeysTableHTML = function()
         const address = jsonSavedPublicKeys[key].address;
         const network = jsonSavedPublicKeys[key].network;
         
+        if (!utils.coinsInfo[network])
+            continue;
+        
         const strCoinShortName = utils.coinsInfo[network].Shortname;
         const strLabel = jsonSavedPublicKeys[key].label;
 
@@ -211,13 +214,21 @@ exports.UpdatePublicKeysTableHTML = function()
         const tdPublic = $("<td >"+address+"</td>");
         const tdLabel = $("<td >"+strLabel +"</td>");
         
+        //button "Edit"
+        var btnEdit = $('<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>');
+         btnEdit[0].onclick = function(){
+             require('./modalEvents').onEditSendToAddressLabel(network, address, strLabel, strCoinShortName);
+        };
+        const tdEdit= $("<td ></td>").append(btnEdit);
+        
+        //button "Send"
         var btnSend = $('<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-send" aria-hidden="true"></span></button>');
          btnSend[0].onclick = function(){
              require('./sendTransaction').onOpenDialog(network, address, strLabel, strCoinShortName);
         };
-        
         const tdSend= $("<td ></td>").append(btnSend);
 
+        //button "Delete"
         var btnClose = $('<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>');
         btnClose[0].onclick = function(){
             utils.deleteKey("PublicKeys", address);
@@ -226,7 +237,7 @@ exports.UpdatePublicKeysTableHTML = function()
         const tdDelete = $("<td ></td>").append(btnClose);
         
         $( "#addresses_to_send" ).append($("<tr></tr>").append(
-            tdCoin, tdPublic, tdLabel, tdSend, tdDelete ));
+            tdCoin, tdPublic, tdLabel, tdEdit, tdSend, tdDelete ));
     }
 };
 

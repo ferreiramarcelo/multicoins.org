@@ -72,7 +72,7 @@ $('#send_coins_to').on('show.bs.modal', function () {
         }
         
         var btnAdd = $('<button type="button" class="btn btn-default buttonPlusAddressForSendTo" aria-label="Left Align"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>');
-        //btnAdd[0].onclick = AddNewAddress;
+        btnAdd[0].onclick = AddNewAddress;
     
         const rowID = 'rowID' + g_rowID++;
 
@@ -90,16 +90,16 @@ $('#send_coins_to').on('show.bs.modal', function () {
             $(colsLast[3]).append(btnAdd);
         };
         
-        if (!$('.inputModalSendAddress').length)
+        if (!$('.rowAddressSendTo').length)
         {
-            $( ".tableSendAddressGroup" ).append($("<tr class='"+rowID+"'></tr>").append(
+            $( ".tableSendAddressGroup" ).append($("<tr class='rowAddressSendTo "+rowID+"'></tr>").append(
                 $("<td style='overflow: visible!important'></td>").append(inputAddr),
                 $("<td></td>").append(inputAmount),
                 $("<td></td>"),
                 $("<td></td>").append(btnAdd)));
         }
         else
-            $( ".tableSendAddressGroup" ).append($("<tr class='"+rowID+"'></tr>").append(
+            $( ".tableSendAddressGroup" ).append($("<tr class='rowAddressSendTo "+rowID+"'></tr>").append(
                 $("<td style='overflow: visible!important'></td>").append(inputAddr),
                 $("<td></td>").append(inputAmount),
                 $("<td></td>").append(btnDel),
@@ -107,4 +107,44 @@ $('#send_coins_to').on('show.bs.modal', function () {
     }
     
     AddNewAddress();
-})
+});
+
+exports.onEditSendToAddressLabel = function(network, address, strLabel, strCoinShortName)
+{
+    const body = 
+            '<form class="form-horizontal">'+
+              '<div class="form-group">'+
+                '<label for="inputEditPublicKey" class="col-sm-2 control-label">Address</label>'+
+                '<div class="col-sm-10">'+
+                  '<input readonly id=\'inputEditPublicKey\' type="text" class="form-control" placeholder="1CHeYxfYo6zVmHSm7B1KztA5f7ZKcMsEWA" size="40">'+
+                '</div>'+
+              '</div>'+
+              '<div class="form-group">'+
+                '<label for="inputEditPublicKeyLabel" class="col-sm-2 control-label">Label</label>'+
+                '<div class="col-sm-10">'+
+                  '<input id=\'inputEditPublicKeyLabel\' type="text" class="form-control" placeholder="Multicoin Donate" size="40">'+
+                '</div>'+
+              '</div>'+
+            '</form>'
+    ;
+    
+    var dialog = require("./alerts").ModalDialog("onEditSendToAddressLabel", "Edit Label", body, function(){
+        var jsonSavedPublicKeys = utils.getItem("PublicKeys").value || {}; 
+        
+        const address = $('#inputEditPublicKey').val();
+        if (jsonSavedPublicKeys[address] == undefined)
+            return;
+            
+        jsonSavedPublicKeys[address].label = $('#inputEditPublicKeyLabel').val();
+        
+        utils.setItem("PublicKeys", jsonSavedPublicKeys);
+        
+        require('./app.js').UpdatePublicKeysTableHTML();
+    });
+    
+    $('#inputEditPublicKey').val(address);
+    $('#inputEditPublicKeyLabel').val(strLabel);
+    
+    dialog.modal('show');
+};
+

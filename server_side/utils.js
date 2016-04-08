@@ -8,10 +8,11 @@ const alerts = require('./alerts');
 const $ = require('jquery');
 
 exports.coinsInfo = {
-        0x00 : require("./coinAPI/bitcoin"), //['bitcoin', "https://btc.blockr.io/api/v1/address/", "?confirmations=0", "BTC", "https://btc.blockr.io/api/v1/tx/push"],
-        0x30 : require("./coinAPI/litecoin"), //['litecoin', "https://ltc.blockr.io/api/v1/address/", "?confirmations=0", "LTC", "https://ltc.blockr.io/api/v1/tx/push"],
-        0x1e : require("./coinAPI/dogecoin"), //['dogecoin', "https://dogechain.info/api/v1/", "?confirmations=0", "DOGE", "https://btc.blockr.io/api/v1/tx/push"],
-        0x6f : require("./coinAPI/bitcoin_test") //['testnet', "https://tbtc.blockr.io/api/v1/address/", "?confirmations=0", "TBTC", "https://tbtc.blockr.io/api/v1/tx/push"]
+        0x00 : require("./coinAPI/bitcoin"),
+        0x30 : require("./coinAPI/litecoin"), 
+        0x1e : require("./coinAPI/dogecoin"),
+        0x6f : require("./coinAPI/bitcoin_test")//, 
+       // 0x37 : require("./coinAPI/peercoin")
     };
 
 exports.scryptParams = {
@@ -269,6 +270,7 @@ exports.getBalance = function(netID, arrayAddr, callback)
 
 exports.pushTransaction = function(netID, hexTX)
 {
+    //alert(hexTX); return;
     exports.coinsInfo[netID].pushTransaction(hexTX, function(data) {
         if (!data || !data.status || !data.message || !data.message.txHash)
             return;

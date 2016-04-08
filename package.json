@@ -26,6 +26,7 @@
     "bip38": "^1.4.0",
     "bitcoinjs-lib": "^2.2.0",
     "browserify": "^13.0.0",
+    "coininfo": "^0.8.2",
     "express": "^4.13.4",
     "firebase": "^2.4.1",
     "int": "^0.2.0",
