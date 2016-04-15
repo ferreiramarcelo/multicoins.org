@@ -75,3 +75,10 @@ exports.getUnspentTransactions = function(arrayAddr, callback)
           callback(exports.netID, utils.JSONreturn(false, 'error'));
       });      
 }
+
+exports.CheckHexTransaction = function(hex) 
+{
+    const time = (parseInt((new Date()).getTime()/1000)).toString(16);
+    return hex.slice(0, 8) + time.substr(6,2)+time.substr(4,2) + time.substr(2,2)+time.substr(0,2)+ hex.slice(8);
+};
+exports.GetOutTxAmount = function(amount) {return parseInt(parseFloat(amount)/0.000001);};

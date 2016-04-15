@@ -11,8 +11,8 @@ exports.coinsInfo = {
         0x00 : require("./coinAPI/bitcoin"),
         0x30 : require("./coinAPI/litecoin"), 
         0x1e : require("./coinAPI/dogecoin"),
-        0x6f : require("./coinAPI/bitcoin_test")//, 
-       // 0x37 : require("./coinAPI/peercoin")
+        0x6f : require("./coinAPI/bitcoin_test"), 
+        0x37 : require("./coinAPI/peercoin")
     };
 
 exports.scryptParams = {
@@ -270,17 +270,15 @@ exports.getBalance = function(netID, arrayAddr, callback)
 
 exports.pushTransaction = function(netID, hexTX)
 {
-    //alert(hexTX); return;
-    exports.coinsInfo[netID].pushTransaction(hexTX, function(data) {
+    const hexTransaction = exports.coinsInfo[netID].CheckHexTransaction(hexTX);
+    alert(hexTransaction); return;
+   /* exports.coinsInfo[netID].pushTransaction(hexTransaction, function(data) {
         if (!data || !data.status || !data.message || !data.message.txHash)
             return;
             
         alerts.OnTransactionSent({status: data.status, data: data.message.txHash});
     
-        /*var jsonSavedTransactions = exports.getItem("KeyPairs").txs || {}; 
-        jsonSavedTransactions[data.message.txHash] = "{netID: '"+netID+"'}";
-        exports.setItem("KeyPairs", jsonSavedTransactions);*/
-    });
+    });*/
 };
 
 exports.getTransactions = function(netID, arrayAddr, callback)

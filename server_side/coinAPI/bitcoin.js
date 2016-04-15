@@ -60,3 +60,6 @@ exports.getUnspentTransactions = function(arrayAddr, callback)
           callback(exports.netID, utils.JSONreturn(false, 'error'));
       });      
 }
+
+exports.CheckHexTransaction = function(hex) {return hex;};
+exports.GetOutTxAmount = function(amount) {return parseInt(parseFloat(amount)/0.00000001);};

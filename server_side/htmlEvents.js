@@ -68,8 +68,9 @@ $('#submitSignMessage').click(function(e) {
         return;
     }
     
-    console.log("keyPair.network="+JSON.stringify(keyPair.network));    
-    $('#textSignature').val(bitcoin.message.sign(keyPair, $('#textForSign').val()).toString('base64'), keyPair.network);
+    const network = keyPair.network;
+    console.log("keyPair.network="+JSON.stringify(network));    
+    $('#textSignature').val(bitcoin.message.sign(keyPair, $('#textForSign').val(), network).toString('base64'));
 });
 
 $('#submitEncryptWallet').click(function(e){
