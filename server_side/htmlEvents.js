@@ -1,7 +1,7 @@
 'use strict';
 
 const app = require('./app');
-const bitcoin = require('bitcoinjs-lib');
+const bitcoin = require('multicoinjs-lib');
 const utils = require('./utils.js');    
 const Firebase = require("firebase");
 const crypto = require('crypto');
@@ -68,8 +68,9 @@ $('#submitSignMessage').click(function(e) {
         return;
     }
     
-    console.log("keyPair.network="+JSON.stringify(keyPair.network));    
-    $('#textSignature').val(bitcoin.message.sign(keyPair, $('#textForSign').val()).toString('base64'), keyPair.network);
+    const network = keyPair.network;
+    console.log("keyPair.network="+JSON.stringify(network));    
+    $('#textSignature').val(bitcoin.message.sign(keyPair, $('#textForSign').val(), network).toString('base64'));
 });
 
 $('#submitEncryptWallet').click(function(e){
@@ -335,6 +336,8 @@ $('#toolButtonEncodeWallet').click(function () {
     InitNavTab("tab_security");
 
     jQuery('.nav-tabs a[href="#tab_encrypt_wallet"]').tab('show');
+    
+    
 });
 $('#toolButtonSaveWallet').click(function () {
     InitNavTab("tab_security");

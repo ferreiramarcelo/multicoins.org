@@ -1,6 +1,6 @@
 'use strict';
 
-const bitcoin = require('bitcoinjs-lib');
+const bitcoin = require('multicoinjs-lib');
 const utils = require('./utils.js');
 const $ = require('jquery');
 
@@ -12,6 +12,7 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
     $('#spanModalBalance').text(utils.getSavedBalance(network)+" " + strCoinShortName);
             
     $('#inputModalSendNetwork').val(network);
+    $('#inputModalSendAddress').val(address);
     
     $( "#inputModalSendFee" ).on('input', function() {
         var sendFee = parseFloat($( this ).val());
@@ -156,7 +157,9 @@ $('#btnSendCoinsReady').click(function () {
         //Output
         var fRealSendAmount = 0.0;
         rowSentInfo.forEach(function(item){
-            new_transaction.addOutput(item.addressSendTo, parseInt(parseFloat(item.sendAmount)/0.00000001));
+            const amount = utils.coinsInfo[network].GetOutTxAmount(item.sendAmount);
+            //new_transaction.addOutput(item.addressSendTo, parseInt(parseFloat(item.sendAmount)/0.00000001));
+            new_transaction.addOutput(item.addressSendTo, amount);
             fRealSendAmount += parseFloat(item.sendAmount);
         });
         
@@ -168,7 +171,11 @@ $('#btnSendCoinsReady').click(function () {
         
         var fChange = parseFloat(current_amount) - fRealSendAmount - parseFloat(sendFee);
         if (fChange > 0.0 && address_for_change.length)
-            new_transaction.addOutput(address_for_change, parseInt(fChange/0.00000001));
+        {
+            const amount = utils.coinsInfo[network].GetOutTxAmount(fChange);
+           // new_transaction.addOutput(address_for_change, parseInt(fChange/0.00000001));
+            new_transaction.addOutput(address_for_change, amount);
+        }
 
         //Sign
         /*for (var index in mapIndexToPrivateKey)
