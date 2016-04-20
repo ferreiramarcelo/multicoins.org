@@ -10,15 +10,15 @@ To start server:
 3. node main.js
 
 
-"main.js" - web server
+"/node_modules/multicoins/main.js" - web server
 
-"constants.js" - http and https ports (you can change it)
+"/node_modules/multicoins/constants.js" - http and https ports (you can change it)
 
-"site/index.html" - main page
+"/node_modules/multicoins/site/index.html" - main page
 
-"site/js/wallet.js" - main javascript. This script generate from "server_side" folder by command: 
+"/node_modules/multicoins/site/js/wallet.js" - main javascript. This script generate from "server_side" folder by command: 
 
-"browserify server_side/htmlEvents.js -s htmlEvents > site/js/wallet.js"
+"browserify --debug /node_modules/multicoins/server_side/htmlEvents.js /node_modules/multicoins/server_side/modalEvents.js -s htmlEvents > /node_modules/multicoins/site/js/wallet.js"
 
 
 

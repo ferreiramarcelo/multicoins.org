@@ -322,7 +322,7 @@
              <div id='tab_trade_top' style="display:none">
                 
                 <ul class="nav nav-tabs">
-                  <!-- Send Money -->
+                  <!-- Send Money (init in module app.js function UpdatePublicKeysTableHTML) -->
                   <li><a href="#tab_send_money" data-toggle="tab">Send money</a></li>
                   <li class="active"><a href="#tab_request_money" data-toggle="tab">Request money</a></li>
                   <li><a href="#tab_transactions" data-toggle="tab">Transactions</a></li>
@@ -430,6 +430,7 @@
           <div class="modal-body">
             <form class="form-horizontal">
               <input type="hidden" id="inputModalSendNetwork">
+              <input type="hidden" id="inputModalSendAddress">
               <div class="divSendAddressGroup">
                 <table class="table table-striped table-bordered ">
                   <thead>

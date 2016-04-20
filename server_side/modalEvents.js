@@ -33,11 +33,13 @@ function MakeInputAddress(network)
     UL.children().click(function() {
         $('.'+idSpanAddress).text($(this).text());
     });
+    
+    const strCurrentAddress = $('#inputModalSendAddress').val() || aAddress[0];
         
     var ret = 
             $('<div class="dropdown"></div>').append(
                 '<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu'+g_rowID+'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">' + 
-                  '<span class="spanAddressTo '+idSpanAddress+'">' + aAddress[0] + '</span>' + 
+                  '<span class="spanAddressTo '+idSpanAddress+'">' + strCurrentAddress + '</span>' + 
                   '<span class="caret"></span>' + 
                 '</button>', 
                 UL

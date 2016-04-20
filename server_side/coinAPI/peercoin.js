@@ -5,7 +5,7 @@ const alerts = require('../alerts');
 const $ = require('jquery');
 
 const urlAPI = "https://ppc.blockr.io/api/v1/address/";
-const urlAPIpush = "https://ppc.blockr.io/api/v1/tx/push";
+const urlAPIpush = "/api/v1/tx/push/ppc";
 
 exports.netID = 0;
 exports.name = "peercoin";
@@ -33,12 +33,12 @@ exports.pushTransaction = function(hexTX)
         alerts.OnTransactionSent(e);
       });   */
       
-    $.post("https://bkchain.org/" + "ppc" + "/api/v1/tx/push",
+   /* $.post("https://multicoins.org/" + "ppc" + "/api/v1/tx/push",
            JSON.stringify({ hexdata: hexTX }),
            function(data) {
              if (data === "exception") {
-               //send_alert('alert-danger', '<strong>Error!</strong> Transaction failed!');
-               alert('Error!');
+               send_alert('alert-danger', '<strong>Error!</strong> Transaction failed!');
+               //alert('Error!');
              } else {
                //send_alert('alert-success', '<strong>Good!</strong> Transaction sent, id: <a href="' + script_name + '/tx/' + data + '" target="_blank">' + data + '</a>');
                alert('Success!');
@@ -46,7 +46,17 @@ exports.pushTransaction = function(hexTX)
              
              // Wait a few seconds before refreshing balances
              //setTimeout(addressRefresh(), 2000);
-           });
+           });*/
+    $.post( urlAPIpush, { "hex": hexTX })
+      .done(function( data ) {
+        //alert( "Data Loaded: " + JSON.stringify(data) );
+        alerts.OnTransactionSent(JSON.parse(data));
+      })
+      .fail(function(e) {
+        //alert( "error " + JSON.stringify(e));
+        alerts.OnTransactionSent(e);
+      });   
+
 };
 
 exports.getTransactions = function(arrayAddr, callback)
@@ -78,7 +88,8 @@ exports.getUnspentTransactions = function(arrayAddr, callback)
 
 exports.CheckHexTransaction = function(hex) 
 {
-    const time = (parseInt((new Date()).getTime()/1000)).toString(16);
-    return hex.slice(0, 8) + time.substr(6,2)+time.substr(4,2) + time.substr(2,2)+time.substr(0,2)+ hex.slice(8);
+    //const time = (parseInt((new Date()).getTime()/1000)).toString(16);
+    //return hex.slice(0, 8) + time.substr(6,2)+time.substr(4,2) + time.substr(2,2)+time.substr(0,2)+ hex.slice(8);
+    return hex;
 };
 exports.GetOutTxAmount = function(amount) {return parseInt(parseFloat(amount)/0.000001);};

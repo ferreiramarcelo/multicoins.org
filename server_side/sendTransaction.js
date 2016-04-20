@@ -1,6 +1,6 @@
 'use strict';
 
-const bitcoin = require('bitcoinjs-lib');
+const bitcoin = require('multicoinjs-lib');
 const utils = require('./utils.js');
 const $ = require('jquery');
 
@@ -12,6 +12,7 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
     $('#spanModalBalance').text(utils.getSavedBalance(network)+" " + strCoinShortName);
             
     $('#inputModalSendNetwork').val(network);
+    $('#inputModalSendAddress').val(address);
     
     $( "#inputModalSendFee" ).on('input', function() {
         var sendFee = parseFloat($( this ).val());

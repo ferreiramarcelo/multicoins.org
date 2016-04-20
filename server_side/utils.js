@@ -3,7 +3,7 @@
 const crypto = require('crypto');
 const Bip38 = require('bip38');
 const base58 = require('./base58');
-const bitcoin = require('bitcoinjs-lib');
+const bitcoin = require('multicoinjs-lib');
 const alerts = require('./alerts');
 const $ = require('jquery');
 
@@ -271,14 +271,14 @@ exports.getBalance = function(netID, arrayAddr, callback)
 exports.pushTransaction = function(netID, hexTX)
 {
     const hexTransaction = exports.coinsInfo[netID].CheckHexTransaction(hexTX);
-    alert(hexTransaction); return;
-   /* exports.coinsInfo[netID].pushTransaction(hexTransaction, function(data) {
+    //alert(hexTransaction); return;
+    exports.coinsInfo[netID].pushTransaction(hexTransaction, function(data) {
         if (!data || !data.status || !data.message || !data.message.txHash)
             return;
             
         alerts.OnTransactionSent({status: data.status, data: data.message.txHash});
     
-    });*/
+    });
 };
 
 exports.getTransactions = function(netID, arrayAddr, callback)

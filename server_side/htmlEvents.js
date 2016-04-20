@@ -1,7 +1,7 @@
 'use strict';
 
 const app = require('./app');
-const bitcoin = require('bitcoinjs-lib');
+const bitcoin = require('multicoinjs-lib');
 const utils = require('./utils.js');    
 const Firebase = require("firebase");
 const crypto = require('crypto');
@@ -336,6 +336,8 @@ $('#toolButtonEncodeWallet').click(function () {
     InitNavTab("tab_security");
 
     jQuery('.nav-tabs a[href="#tab_encrypt_wallet"]').tab('show');
+    
+    
 });
 $('#toolButtonSaveWallet').click(function () {
     InitNavTab("tab_security");

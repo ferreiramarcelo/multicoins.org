@@ -30,7 +30,7 @@ exports.ModalDialog = function(id, title, body, onok)
           )
   );
     
-    $('#SimpleAlert').remove();
+    $('#' + id).remove();
     
     $( "body" ).append($html);
 
@@ -54,36 +54,17 @@ exports.OnTransactionSent = function(result)
     if (responce.data)
         message1 = responce.data;
     
-    var message2 = "";
+    var message2 = result.responseText || "";
+    message2 += "<br>Please try again later<br>";
     if (responce.message)
         message2 = responce.message;
-    
+    if (title == "Success!")
+        message2 = "";
+
+
     const id = "OnTransactionSent";
     
     exports.ModalDialog(id, title, '<div>'+message1 +'<br>'+message2+'<br>Note, that push TX has an active limit of 5 API requests per minute.</div>');
-    
-    /*const $html = $(
-        '<div class="modal fade" id="OnTransactionSent" tabindex="-1" role="dialog" aria-labelledby="OnTransactionSentLabel">'+
-          '<div class="modal-dialog" role="document">'+
-            '<div class="modal-content">'+
-              '<div class="modal-header">'+
-                '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
-                '<h4 class="modal-title" id="OnTransactionSentLabel">'+title+'</h4>'+
-              '</div>'+
-              '<div class="modal-body">'+
-                '<div>'+message1 +'<br>'+message2+'<br>Note, that push TX has an active limit of 5 API requests per minute.</div>'+
-              '</div>'+
-              '<div class="modal-footer">'+
-                '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
-             '</div>'+
-            '</div>'+
-          '</div>'+
-        '</div>'
-    );
-    
-    $('#OnTransactionSent').remove();
-    
-    $( "body" ).append($html);*/
     
     if (title == "Failed!")
     {
