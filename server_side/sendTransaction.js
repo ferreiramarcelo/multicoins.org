@@ -229,7 +229,9 @@ $('#btnSendCoinsReady').click(function () {
             new_transaction.sign(i, aSignArray[i]);
         }
         
-        if (!utils.pushTransaction(network, new_transaction.build().toHex(), sendFee))
-            jQuery('#send_coins_to').modal('show');
+        utils.pushTransaction(network, new_transaction.build().toHex(), sendFee, function(e) {
+            if (!e)
+                jQuery('#send_coins_to').modal('show');
+        });
     });
 });

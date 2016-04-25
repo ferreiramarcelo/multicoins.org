@@ -1,6 +1,6 @@
 'use strict';
 
-exports.ModalDialog = function(id, title, body, onok)
+exports.ModalDialog = function(id, title, body, onok, oncancel)
 {
   const ok_button = $('<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>');
   const close_button = $('<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
@@ -12,6 +12,13 @@ exports.ModalDialog = function(id, title, body, onok)
       onok();
     });
     footer.append(ok_button);
+  }
+
+  if (oncancel) 
+  {
+    close_button.click(function() {
+      oncancel();
+    });
   }
   
   footer.append(close_button);
@@ -74,13 +81,13 @@ exports.OnTransactionSent = function(result)
     jQuery('#' + id).modal('show');    
 };
 
-exports.Alert = function(title, message, onok)
+exports.Alert = function(title, message, onok, oncancel)
 {
   const strTitle = title || "";
   const strMessage = message || "";
   const id = "SimpleAlert";
   
-  exports.ModalDialog(id, strTitle, '<div>'+strMessage+'</div>', onok);
+  exports.ModalDialog(id, strTitle, '<div>'+strMessage+'</div>', onok, oncancel);
   
   /*  const $html = $(
         '<div class="modal fade" id="'+id+'" tabindex="-1" role="dialog" aria-labelledby="OnTransactionSentLabel">'+

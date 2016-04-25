@@ -66,14 +66,20 @@ exports.getUnspentTransactions = function(arrayAddr, callback)
       });      
 }
 
-exports.CheckFee = function(hexTX, fee)
+exports.CheckFee = function(hexTX, fee, callback)
 {
     var bRet = false;
-    const fRecommended = exports.fee/(1+hexTX.length/(2*1024));
+    const fRecommended = Math.max(exports.fee, exports.fee/(1+hexTX.length/(2*1024)));
     if (parseFloat(fee) < fRecommended)
-        alerts.Alert('Warning', 'Your transaction fee is too small (recommended "'+fRecommended +'")<BR>Push transaction anyway (press OK button) ?', function() {bRet = true;});
-
-    return bRet;        
+    {
+        alerts.Alert(
+            'Warning', 
+            'Your transaction fee is too small (recommended "'+exports.fee +'")<BR>Push transaction anyway (press OK button) ?', 
+            function() {callback(true);},
+            function() {callback(false);});
+    }
+    else 
+        callback(true);
 }
 
 exports.CheckHexTransaction = function(hex) {return hex;};
