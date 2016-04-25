@@ -27,8 +27,9 @@ exports.getBalance = function(arrayAddr, callback)
         });
         callback({status: 'success', data: data});
     })
-    .fail(function() {
-        callback(utils.JSONreturn(false, 'error'));
+    .fail(function(e) {
+        console.log((e && e.message) ? e.message : JSON.stringify(e));
+        callback(utils.JSONreturn('false', 'error'));
     });      
 
 };

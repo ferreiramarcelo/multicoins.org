@@ -20,7 +20,7 @@ exports.getBalance = function(arrayAddr, callback)
         callback(data);
     })
       .fail(function() {
-          callback(utils.JSONreturn(false, 'error'));
+          callback(utils.JSONreturn('false', 'error'));
       });      
 };
 
