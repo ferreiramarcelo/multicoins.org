@@ -268,8 +268,13 @@ exports.getBalance = function(netID, arrayAddr, callback)
     exports.coinsInfo[netID].getBalance(arrayAddr, callback);
 };
 
-exports.pushTransaction = function(netID, hexTX)
+exports.pushTransaction = function(netID, hexTX, fee)
 {
+    console.log("pushTransaction hex=" + hexTX);
+    
+    if (!exports.coinsInfo[netID].CheckFee(hexTX, fee))
+        return false;
+    
     const hexTransaction = exports.coinsInfo[netID].CheckHexTransaction(hexTX);
     //alert(hexTransaction); return;
     exports.coinsInfo[netID].pushTransaction(hexTransaction, function(data) {
@@ -279,6 +284,8 @@ exports.pushTransaction = function(netID, hexTX)
         alerts.OnTransactionSent({status: data.status, data: data.message.txHash});
     
     });
+    
+    return true;
 };
 
 exports.getTransactions = function(netID, arrayAddr, callback)

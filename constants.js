@@ -1,4 +1,4 @@
 'use strict';
 
-exports.my_port = 8080; //http port
-exports.my_portSSL = 4443; //https port
+exports.my_port = process.env.PORT; //8088; //http port
+exports.my_portSSL = 9443; //https port

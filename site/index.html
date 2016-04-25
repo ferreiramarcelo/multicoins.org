@@ -446,14 +446,20 @@
               <div class="form-group">
                 <label for="inputModalSendFee" class="col-sm-2 control-label">Fee</label>
                 <div class="col-sm-4 display-table">
-                  <input type="text" class="form-control" id="inputModalSendFee" placeholder="0.0">
+                  <input type="text" class="form-control" id="inputModalSendFee">
                   <span id='spanModalFeeCoinName' class="input-group-addon">BTC</span>
                 </div>
+                <div class="col-sm-6 display-table control-label align_left">
+                  <span class='spanRecommendedFee'></span>
+                </div>
               </div>
-              <div class="form-group">
+              <div class="form-group groupBalance">
                 <label for="spanModalBalance" class="col-sm-2 control-label">Balance</label>
                 <div class="col-sm-4 display-table">
-                  <span id='spanModalBalance' class="input-group-addon">BTC</span>
+                  <div class='form-control'>
+                    <span id='spanModalBalance'>BTC</span>
+                  </div>
+                  
                 </div>
               </div>
               <div id='divSendMoneyPassword' class="form-group">

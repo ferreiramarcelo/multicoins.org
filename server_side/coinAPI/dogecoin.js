@@ -10,6 +10,7 @@ const token = '?token=eb9e796f9a84f5c79e7fc59600bc3877';
 exports.netID = 0x1e;
 exports.name = "dogecoin";
 exports.Shortname = "DOGE";
+exports.fee = 0.0001;
 
 exports.getBalance = function(arrayAddr, callback)
 {
@@ -106,5 +107,16 @@ exports.getUnspentTransactions = function(arrayAddr, callback)
         callback(exports.netID, utils.JSONreturn(false, 'error'));    
     });
 };
+
+exports.CheckFee = function(hexTX, fee)
+{
+    var bRet = false;
+    const fRecommended = exports.fee/(1+hexTX.length/(2*1024));
+    if (parseFloat(fee) < fRecommended)
+        alerts.Alert('Warning', 'Your transaction fee is too small (recommended "'+fRecommended +'")<BR>Push transaction anyway (press OK button) ?', function() {bRet = true;});
+
+    return bRet;        
+}
+
 exports.CheckHexTransaction = function(hex) {return hex;};
 exports.GetOutTxAmount = function(amount) {return parseInt(parseFloat(amount)/0.00000001);};

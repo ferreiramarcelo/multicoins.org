@@ -9,6 +9,10 @@ body {
   display : table;
 }
 
+.align_left {
+  text-align: left ! important;
+}
+
 .fixed-table { 
   table-layout:fixed;
 }

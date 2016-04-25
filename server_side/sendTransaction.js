@@ -2,11 +2,14 @@
 
 const bitcoin = require('multicoinjs-lib');
 const utils = require('./utils.js');
+const alerts = require('./alerts');
 const $ = require('jquery');
 
 exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
 {
     $('#inputModalSendAddressLabel').val(strLabel);
+    $('#inputModalSendFee').val('');
+    $("#inputModalSendAmount").val('');
     $('#spanModalAmountCoinName').text(strCoinShortName);
     $('#spanModalFeeCoinName').text(strCoinShortName);
     $('#spanModalBalance').text(utils.getSavedBalance(network)+" " + strCoinShortName);
@@ -14,26 +17,51 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
     $('#inputModalSendNetwork').val(network);
     $('#inputModalSendAddress').val(address);
     
-    $( "#inputModalSendFee" ).on('input', function() {
-        var sendFee = parseFloat($( this ).val());
+    function onChangeFee()
+    {
+        var sendFee = parseFloat($( '#inputModalSendFee' ).val());
         if (isNaN(sendFee))
-            sendFee = 0.0;
+        {
+            sendFee = utils.coinsInfo[network].fee;
+            $('#inputModalSendFee').val(sendFee);
+            $('#inputModalSendFee')[0].placeholder = sendFee;
+            $('.spanRecommendedFee').text('(recommended minimum '+sendFee+' )');
+        }
                 
         var sendAmount = parseFloat($( "#inputModalSendAmount" ).val());
         if (isNaN(sendAmount))
             sendAmount = 0.0;
 
-        $('#spanModalBalance').text(utils.getSavedBalance(network)-sendAmount-sendFee+" " + strCoinShortName);
-    });
-            
-    var sendAmount = parseFloat($( "#inputModalSendAmount" ).val());
+        const fNewBalance = utils.getSavedBalance(network)-sendAmount-sendFee;
+        $('#spanModalBalance').text(fNewBalance+" " + strCoinShortName);
+        
+        $('.groupBalance').removeClass('has-error');
+        $('.groupBalance').addClass('has-success');
+        if (fNewBalance < 0)
+        {
+            $('.groupBalance').removeClass('has-success');
+            $('.groupBalance').addClass('has-error');
+        }
+        
+    }
+    
+    $( "#inputModalSendFee" ).on('input', onChangeFee);
+       
+    onChangeFee();   
+    /*var sendAmount = parseFloat($( "#inputModalSendAmount" ).val());
     if (isNaN(sendAmount))
         sendAmount = 0.0;
+        
     var sendFee = parseFloat($( '#inputModalSendFee' ).val());
     if (isNaN(sendFee))
-        sendFee = 0.0;
+    {
+        sendFee = utils.coinsInfo[network].fee;
+        $( '#inputModalSendFee' )[0].placeholder = sendFee;
+        $('.spanRecommendedFee').text('(recommended minimum '+sendFee+' )');
+    }
                 
-    $('#spanModalBalance').text(utils.getSavedBalance(network)-sendAmount-sendFee+" " + strCoinShortName);
+    const fNewBalance = utils.getSavedBalance(network)-sendAmount-sendFee;
+    $('#spanModalBalance').text(fNewBalance+" " + strCoinShortName);*/
                 
     jQuery('#send_coins_to').modal('show');
    
@@ -42,11 +70,12 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
 };
 
 $('#btnSendCoinsReady').click(function () {
+    console.log('btnSendCoinsReady click');
     const password = $('#inputSendMoneyPassword').val();
     if (utils.getSavedEncodePassword().length && !utils.isValidEncodePassword(password))
     {
         console.log('Invalid send password: ' + password);
-        alert('Invalid password!');
+        alerts.Alert('Error', 'Invalid password!');
         return;
     }
     jQuery('#send_coins_to').modal('hide');
@@ -59,13 +88,15 @@ $('#btnSendCoinsReady').click(function () {
         const sendAmount = parseFloat($(row).find('#inputModalSendAmount').val());
         if (isNaN(sendAmount) || sendAmount <= 0)
         {
-            alert('ERROR: bad send amount');
+            alerts.Alert('Error', 'Bad send amount');
             return;
         }
         dFullSentAmount += sendAmount;
         
         rowSentInfo.push({addressSendTo : $(row).find('.spanAddressTo').text(), sendAmount : sendAmount});
     }
+    
+    console.log('btnSendCoinsReady sent amount checked');
 
     /*const addressSendTo = $('.spanAddressTo')[0].textContent;
 
@@ -79,8 +110,10 @@ $('#btnSendCoinsReady').click(function () {
     var sendFee = parseFloat($( '#inputModalSendFee' ).val());
     if (isNaN(sendFee) || sendFee < 0)
         sendFee = 0.0;
-    
+        
     const network = $('#inputModalSendNetwork').val();
+    require('./app').RefreshKeyPairsBalance(network);
+    
     var jsonSavedKeyPairs = utils.getItem("KeyPairs").value || {}; 
 
     var addresses = [];
@@ -96,11 +129,18 @@ $('#btnSendCoinsReady').click(function () {
     }
 
     if (!addresses.length)
+    {
+        alerts.Alert("Error", "Bad balance or network.<br>Please check balance for the '"+utils.coinsInfo[network].name+"' network.");
         return;
+    }
     
+    console.log('call getUnspentTransactions');
     utils.getUnspentTransactions(network, addresses, function(netID, data) {
         if (data.status.localeCompare('success') != 0)
+        {
+            alerts.Alert("Error", "Сan not find unspent transaction for the '"+utils.coinsInfo[network].name+"' network. Please try again later.");
             return;
+        }
         
         const networkCurrent = bitcoin.networks[utils.coinsInfo[network].name];
         
@@ -146,7 +186,7 @@ $('#btnSendCoinsReady').click(function () {
         
         if (current_amount < dFullSentAmount+sendFee)
         {
-            alert('ERROR: bad send amount!');
+            alerts.Alert('Error', 'Bad (too big) send amount!');
             return;
         }
         
@@ -188,6 +228,7 @@ $('#btnSendCoinsReady').click(function () {
             new_transaction.sign(i, aSignArray[i]);
         }
         
-        utils.pushTransaction(network, new_transaction.build().toHex());
+        if (!utils.pushTransaction(network, new_transaction.build().toHex(), sendFee))
+            jQuery('#send_coins_to').modal('show');
     });
 });
