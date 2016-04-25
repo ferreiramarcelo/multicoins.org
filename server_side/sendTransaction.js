@@ -138,6 +138,7 @@ $('#btnSendCoinsReady').click(function () {
     utils.getUnspentTransactions(network, addresses, function(netID, data) {
         if (!data || !data.status || data.status.localeCompare('success') != 0)
         {
+            console.log("getUnspentTransaction failed data="+(data?JSON.stringify(data):"null"))
             alerts.Alert("Error", "Сan not find unspent transaction for the '"+utils.coinsInfo[network].name+"' network. Please try again later.");
             return;
         }
