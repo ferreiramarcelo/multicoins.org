@@ -10,6 +10,7 @@ const urlAPIpush = "https://ltc.blockr.io/api/v1/tx/push";
 exports.netID = 0x30;
 exports.name = "litecoin";
 exports.Shortname = "LTC";
+exports.fee = 0.001;
 
 exports.getBalance = function(arrayAddr, callback)
 {
@@ -64,5 +65,16 @@ exports.getUnspentTransactions = function(arrayAddr, callback)
           callback(exports.netID, utils.JSONreturn(false, 'error'));
       });      
 }
+
+exports.CheckFee = function(hexTX, fee)
+{
+    var bRet = false;
+    const fRecommended = exports.fee/(1+hexTX.length/(2*1024));
+    if (parseFloat(fee) < fRecommended)
+        alerts.Alert('Warning', 'Your transaction fee is too small (recommended "'+fRecommended +'")<BR>Push transaction anyway (press OK button) ?', function() {bRet = true;});
+
+    return bRet;        
+}
+
 exports.CheckHexTransaction = function(hex) {return hex;};
 exports.GetOutTxAmount = function(amount) {return parseInt(parseFloat(amount)/0.00000001);};

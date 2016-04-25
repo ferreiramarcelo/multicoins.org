@@ -362,7 +362,7 @@ exports.AddPublicKey = function(key, label)
     exports.UpdatePublicKeysTableHTML();
 };
 
-exports.RefreshKeyPairsBalance = function()
+exports.RefreshKeyPairsBalance = function(network)
 {
     var jsonSavedKeyPairs = utils.getItem("KeyPairs").value || {}; 
     
@@ -374,6 +374,9 @@ exports.RefreshKeyPairsBalance = function()
             
         if (pairs[jsonSavedKeyPairs[key].network] == undefined)
             pairs[jsonSavedKeyPairs[key].network] = [];
+         
+        if (network && utils.coinsInfo[jsonSavedKeyPairs[key].network] != utils.coinsInfo[network])  
+            continue;
             
         pairs[jsonSavedKeyPairs[key].network].push( jsonSavedKeyPairs[key].address );
     }

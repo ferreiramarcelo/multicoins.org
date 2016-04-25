@@ -446,14 +446,20 @@
               <div class="form-group">
                 <label for="inputModalSendFee" class="col-sm-2 control-label">Fee</label>
                 <div class="col-sm-4 display-table">
-                  <input type="text" class="form-control" id="inputModalSendFee" placeholder="0.0">
+                  <input type="text" class="form-control" id="inputModalSendFee">
                   <span id='spanModalFeeCoinName' class="input-group-addon">BTC</span>
                 </div>
+                <div class="col-sm-6 display-table control-label align_left">
+                  <span class='spanRecommendedFee'></span>
+                </div>
               </div>
-              <div class="form-group">
+              <div class="form-group groupBalance">
                 <label for="spanModalBalance" class="col-sm-2 control-label">Balance</label>
                 <div class="col-sm-4 display-table">
-                  <span id='spanModalBalance' class="input-group-addon">BTC</span>
+                  <div class='form-control'>
+                    <span id='spanModalBalance'>BTC</span>
+                  </div>
+                  
                 </div>
               </div>
               <div id='divSendMoneyPassword' class="form-group">
@@ -621,7 +627,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <!--<script src="js/wallet_loader.js"></script>-->
-    <script src='/js/wallet.js'></script>
+    <script src="js/wallet_loader.js"></script>
+    <!--<script src='/js/wallet.js'></script>-->
   </body>
 </html>

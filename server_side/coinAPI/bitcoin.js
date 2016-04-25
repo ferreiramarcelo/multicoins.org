@@ -10,6 +10,7 @@ const urlAPIpush = "https://btc.blockr.io/api/v1/tx/push";
 exports.netID = 0;
 exports.name = "bitcoin";
 exports.Shortname = "BTC";
+exports.fee = 0.0001;
 
 exports.getBalance = function(arrayAddr, callback)
 {
@@ -59,6 +60,16 @@ exports.getUnspentTransactions = function(arrayAddr, callback)
       .fail(function() {
           callback(exports.netID, utils.JSONreturn(false, 'error'));
       });      
+}
+
+exports.CheckFee = function(hexTX, fee)
+{
+    var bRet = false;
+    const fRecommended = exports.fee/(1+hexTX.length/(2*1024));
+    if (parseFloat(fee) < fRecommended)
+        alerts.Alert('Warning', 'Your transaction fee is too small (recommended "'+fRecommended +'")<BR>Push transaction anyway (press OK button) ?', function() {bRet = true;});
+
+    return bRet;        
 }
 
 exports.CheckHexTransaction = function(hex) {return hex;};

@@ -74,13 +74,13 @@ exports.OnTransactionSent = function(result)
     jQuery('#' + id).modal('show');    
 };
 
-exports.Alert = function(title, message)
+exports.Alert = function(title, message, onok)
 {
   const strTitle = title || "";
   const strMessage = message || "";
   const id = "SimpleAlert";
   
-  exports.ModalDialog(id, strTitle, '<div>'+strMessage+'</div>');
+  exports.ModalDialog(id, strTitle, '<div>'+strMessage+'</div>', onok);
   
   /*  const $html = $(
         '<div class="modal fade" id="'+id+'" tabindex="-1" role="dialog" aria-labelledby="OnTransactionSentLabel">'+

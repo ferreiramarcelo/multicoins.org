@@ -10,6 +10,7 @@ const urlAPIpush = "/api/v1/tx/push/ppc";
 exports.netID = 0;
 exports.name = "peercoin";
 exports.Shortname = "PPC";
+exports.fee = 0.01;
 
 exports.getBalance = function(arrayAddr, callback)
 {
@@ -25,28 +26,6 @@ exports.getBalance = function(arrayAddr, callback)
 exports.pushTransaction = function(hexTX)
 {
     console.log('pushTransaction' + hexTX);
-   /* $.post( "https://bkchain.org/" + "ppc" + "/api/v1/tx/push", { "hex": hexTX })
-      .done(function( data ) {
-        alerts.OnTransactionSent(data);
-      })
-      .fail(function(e) {
-        alerts.OnTransactionSent(e);
-      });   */
-      
-   /* $.post("https://multicoins.org/" + "ppc" + "/api/v1/tx/push",
-           JSON.stringify({ hexdata: hexTX }),
-           function(data) {
-             if (data === "exception") {
-               send_alert('alert-danger', '<strong>Error!</strong> Transaction failed!');
-               //alert('Error!');
-             } else {
-               //send_alert('alert-success', '<strong>Good!</strong> Transaction sent, id: <a href="' + script_name + '/tx/' + data + '" target="_blank">' + data + '</a>');
-               alert('Success!');
-             }
-             
-             // Wait a few seconds before refreshing balances
-             //setTimeout(addressRefresh(), 2000);
-           });*/
     $.post( urlAPIpush, { "hex": hexTX })
       .done(function( data ) {
         //alert( "Data Loaded: " + JSON.stringify(data) );
@@ -86,10 +65,16 @@ exports.getUnspentTransactions = function(arrayAddr, callback)
       });      
 }
 
-exports.CheckHexTransaction = function(hex) 
+exports.CheckFee = function(hexTX, fee)
 {
-    //const time = (parseInt((new Date()).getTime()/1000)).toString(16);
-    //return hex.slice(0, 8) + time.substr(6,2)+time.substr(4,2) + time.substr(2,2)+time.substr(0,2)+ hex.slice(8);
-    return hex;
-};
+    var bRet = false;
+    const fRecommended = exports.fee/(1+hexTX.length/(2*1024));
+    if (parseFloat(fee) < fRecommended)
+        alerts.Alert('Warning', 'Your transaction fee is too small (recommended "'+fRecommended +'")<BR>Push transaction anyway (press OK button) ?', function() {bRet = true;});
+
+    return bRet;        
+}
+
+
+exports.CheckHexTransaction = function(hex) {return hex;};
 exports.GetOutTxAmount = function(amount) {return parseInt(parseFloat(amount)/0.000001);};

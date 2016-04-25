@@ -22,7 +22,7 @@ function LoadScript(url, onEnd)
         }
     };
     xmlhttp.onprogress = function(event) {
-        var total = 1024*1024*2;
+        var total = 1024*1024*4;
         if (event.total)
             total = event.total;
             
