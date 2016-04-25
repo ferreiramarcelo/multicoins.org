@@ -388,8 +388,11 @@ exports.RefreshKeyPairsBalance = function(network)
     {
         utils.getBalance(keyHash, pairs[keyHash], function(data) {
             
-            if (data.status.localeCompare('success') != 0)
+            if (!data || !data.status || data.status.localeCompare('success') != 0)
+            {
+                console.log("ERROR: getBalance failed: " + (data ? JSON.stringify(data) : "data=null"));
                 return;
+            }
                 
             [].concat(data.data).forEach(function(element) {
                 if (jsonSavedKeyPairs[element.address] == undefined)
