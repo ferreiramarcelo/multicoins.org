@@ -321,8 +321,11 @@ exports.AddKeyPair = function(keyPair, password)
     const bip38 = utils.getBIP38(keyPair.network.pubKeyHash);
         
     utils.getBalance(keyPair.network.pubKeyHash, [keyPair.getAddress()], function(data) {
-        if (data.status.localeCompare('success') != 0)
+        if (!data || !data.status || data.status.localeCompare('success') != 0)
+        {
+            console.log("getBalance error: " + (data ? JSON.stringify(data) : "data = null"));
             return;
+        }
             
         [].concat(data.data).forEach(function(element) {
             
