@@ -47,10 +47,10 @@ exports.getTransactions = function(arrayAddr, callback)
         $.getJSON( urlAPI + "unconfirmed/" + arrayAddr.toString(), function(data2) {
             callback(exports.netID, data2.data);
         }).fail(function() {
-            callback(exports.netID, utils.JSONreturn(false, 'error'));
+            callback(exports.netID, utils.JSONreturn('false', 'error'));
         });      
-    }).fail(function() {
-        callback(exports.netID, utils.JSONreturn(false, 'error'));
+    }).fail(function(e) {
+        callback(exports.netID, utils.JSONreturn('false', 'error'));
     });   
     
 }

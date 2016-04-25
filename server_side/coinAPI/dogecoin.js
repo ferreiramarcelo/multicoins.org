@@ -105,8 +105,9 @@ exports.getUnspentTransactions = function(arrayAddr, callback)
             });
         }); 
         callback(exports.netID, {status: 'success', data: data});
-    }).fail(function() {
-        callback(exports.netID, utils.JSONreturn(false, 'error'));    
+    }).fail(function(e) {
+        console.log("getUnspentTransactions fail e=" + (e&&e.message?e.message:'null'));
+        callback(exports.netID, utils.JSONreturn('false', 'error'));    
     });
 };
 

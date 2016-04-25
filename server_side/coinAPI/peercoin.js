@@ -60,8 +60,9 @@ exports.getUnspentTransactions = function(arrayAddr, callback)
     $.getJSON( urlAPI + "unspent/" + arrayAddr.toString(), function(data) {
         callback(exports.netID, data);
     })
-      .fail(function() {
-          callback(exports.netID, utils.JSONreturn(false, 'error'));
+      .fail(function(e) {
+          console.log("getUnspentTransactions fail e=" + (e&&e.message?e.message:'null'));
+          callback(exports.netID, utils.JSONreturn('false', 'error'));
       });      
 }
 
