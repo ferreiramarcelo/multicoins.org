@@ -112,7 +112,7 @@ $('#btnSendCoinsReady').click(function () {
         sendFee = 0.0;
         
     const network = $('#inputModalSendNetwork').val();
-    require('./app').RefreshKeyPairsBalance(network);
+   // require('./app').RefreshKeyPairsBalance(network);
     
     var jsonSavedKeyPairs = utils.getItem("KeyPairs").value || {}; 
 
