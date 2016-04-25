@@ -45859,7 +45859,7 @@ const alerts = require('../alerts');
 const $ = require('jquery');
 
 const urlAPI = "https://ppc.blockr.io/api/v1/address/";
-const urlAPIpush = "/api/v1/tx/push/ppc";
+const urlAPIpush = "https://multicoins.org/api/v1/tx/push/ppc";
 
 exports.netID = 0;
 exports.name = "peercoin";
