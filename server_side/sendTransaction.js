@@ -141,7 +141,7 @@ $('#btnSendCoinsReady').click(function () {
             alerts.Alert("Error", "Сan not find unspent transaction for the '"+utils.coinsInfo[network].name+"' network. Please try again later.");
             return;
         }
-        
+        console.log("getUnspentTransactions success. data="+JSON.stringify(data));
         const networkCurrent = bitcoin.networks[utils.coinsInfo[network].name];
         
         var new_transaction = new bitcoin.TransactionBuilder(networkCurrent);
