@@ -20,6 +20,7 @@ exports.getBalance = function(arrayAddr, callback)
         else addrs += addr;
     });
     
+    console.log("GetBalance "+exports.Shortname+"param: "+addrs);
     $.getJSON( 'https://api.blockcypher.com/v1/doge/main/addrs/'+addrs+'/balance' + token, function(data) {
         data = [].concat(data);
         data.forEach(function(element) {
