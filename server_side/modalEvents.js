@@ -69,7 +69,7 @@ $('#send_coins_to').on('show.bs.modal', function () {
             if (isNaN(sendFee))
                 sendFee = 0.0;
                     
-            $('#spanModalBalance').text(utils.getSavedBalance(network)-sendAmount-sendFee+" " + strCoinShortName);
+            $('#spanModalBalance').text(utils.getSavedBalance(network)-sendAmount-sendFee);
             
         }
         

@@ -12,7 +12,7 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
     $("#inputModalSendAmount").val('');
     $('#spanModalAmountCoinName').text(strCoinShortName);
     $('#spanModalFeeCoinName').text(strCoinShortName);
-    $('#spanModalBalance').text(utils.getSavedBalance(network)+" " + strCoinShortName);
+    $('#spanModalBalance').text(utils.getSavedBalance(network));
             
     $('#inputModalSendNetwork').val(network);
     $('#inputModalSendAddress').val(address);
@@ -33,7 +33,7 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
             sendAmount = 0.0;
 
         const fNewBalance = utils.getSavedBalance(network)-sendAmount-sendFee;
-        $('#spanModalBalance').text(fNewBalance+" " + strCoinShortName);
+        $('#spanModalBalance').text(fNewBalance);
         
         $('.groupBalance').removeClass('has-error');
         $('.groupBalance').addClass('has-success');
