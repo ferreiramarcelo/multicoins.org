@@ -64,7 +64,7 @@ $('#submitSignMessage').click(function(e) {
   
     if (!keyPair)
     {
-        alert('Invalid private key or wallet password!');
+        alerts.Aert('Error', 'Invalid private key or wallet password!');
         return;
     }
     
@@ -117,7 +117,7 @@ function onBackupOrRestore()
     $('#divBackupWalletLogin').removeClass('has-error');
     if (!user.length)
     {
-        alert('Error: Wallet name is empty!');
+        alerts.Alert('Error', 'Wallet name is empty!');
         $('#divBackupWalletLogin').addClass('has-error');
         return 0;
     }
@@ -125,7 +125,7 @@ function onBackupOrRestore()
     $('#divBackupWalletPassword2').removeClass('has-error');
     if (password.localeCompare($('#inputBackupWalletPassword2').val()) != 0 || !password.length )
     {
-        alert('Error: Passwords do not match or empty');
+        alerts.Alert('Error', 'Passwords do not match or empty');
         $('#divBackupWalletPassword2').addClass('has-error');
         return 0;
     }
@@ -140,7 +140,7 @@ function onBackupOrRestore()
         return {"ref" : myFirebaseRef.child("users/"+uid ), "uid" : uid};
     }                       
     catch(e){
-        alert(e.message);
+        alerts.Alert('Error', e.message);
         return 0;
     }
     
@@ -153,7 +153,7 @@ $('#submitBackup').click(function(e){
     
     if (!savedPassword.length)
     {
-        alert("Error: You can not save decoded wallet!");
+        alerts.Alert('Error', "You can not save decrypted wallet!");
 
         jQuery('.nav-tabs a[href="#tab_encrypt_wallet"]').tab('show');
         
@@ -226,9 +226,9 @@ $('#submitSignMessageVerify').click(function(e) {
     const result = bitcoin.message.verify(address, $('#textSignatureVerify').val(), $('#textForSignVerify').val(), network);
     
     if (result)
-        alert("coin:" + networkName+ " message Verify OK");
+        alerts.Alert('Success', "coin:" + networkName+ " message Verify OK");
     else
-        alert("coin:" + networkName+ " message Verify FALSE");
+        alerts.Alert('Error', "coin:" + networkName+ " message Verify FALSE");
 });
 
 $('#tab_trade_top a').click(function () {
@@ -251,7 +251,7 @@ $('#btnPrivateKeyReady').click(function (e) {
   
     if (!utils.isValidEncodePassword(password))
     {
-        alert('Invalid wallet password!');
+        alerts.Alert('Error', 'Invalid wallet password!');
         return false;
     }
 
@@ -271,7 +271,7 @@ $('#btnNewKeyPairReady').click(function (e) {
     
     if (!utils.isValidEncodePassword(password))
     {
-        alert('Invalid wallet password!');
+        alerts.Alert('Error', 'Invalid wallet password!');
         return false;
     }
         

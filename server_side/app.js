@@ -123,13 +123,13 @@ exports.UpdateBalanceTable = function()
                 
             utils.setItem("Settings", jsonSavedSettingsVar);
             
-            if ($("#tab_request_money").is(':visible'))
+            //if ($("#tab_request_money").is(':visible'))
                 exports.UpdateKeyPairsTableHTML();
                 
-            if ($("#tab_transactions").is(':visible'))
+            //if ($("#tab_transactions").is(':visible'))
                 exports.UpdateTransactionsTableHTML();
                 
-            if ($("#tab_send_money").is(':visible'))
+           // if ($("#tab_send_money").is(':visible'))
                 exports.UpdatePublicKeysTableHTML();
         };
 

@@ -68,7 +68,7 @@ exports.getSavedBalance = function(network)
         if (!isNaN(nextBalance))
             ret += nextBalance;
     }
-    return ret;
+    return parseFloat(ret.toPrecision(12));
 };
 
 exports.getSavedEncodePassword = function()

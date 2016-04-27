@@ -5,6 +5,20 @@ const utils = require('./utils.js');
 const alerts = require('./alerts');
 const $ = require('jquery');
 
+exports.ChangeBalance = function(fNewBalance)
+{
+    $('#spanModalBalance').text(fNewBalance);
+    
+    $('.groupBalance').removeClass('has-error');
+    $('.groupBalance').addClass('has-success');
+    if (fNewBalance < 0)
+    {
+        $('.groupBalance').removeClass('has-success');
+        $('.groupBalance').addClass('has-error');
+    }
+    
+}
+
 exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
 {
     $('#inputModalSendAddressLabel').val(strLabel);
@@ -22,7 +36,7 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
         var sendFee = parseFloat($( '#inputModalSendFee' ).val());
         if (isNaN(sendFee))
         {
-            sendFee = utils.coinsInfo[network].fee;
+            sendFee = parseFloat(utils.coinsInfo[network].fee.toPrecision(12));
             $('#inputModalSendFee').val(sendFee);
             $('#inputModalSendFee')[0].placeholder = sendFee;
             $('.spanRecommendedFee').text('(recommended minimum '+sendFee+' )');
@@ -32,41 +46,16 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
         if (isNaN(sendAmount))
             sendAmount = 0.0;
 
-        const fNewBalance = utils.getSavedBalance(network)-sendAmount-sendFee;
-        $('#spanModalBalance').text(fNewBalance);
-        
-        $('.groupBalance').removeClass('has-error');
-        $('.groupBalance').addClass('has-success');
-        if (fNewBalance < 0)
-        {
-            $('.groupBalance').removeClass('has-success');
-            $('.groupBalance').addClass('has-error');
-        }
-        
+        exports.ChangeBalance(
+            parseFloat( (utils.getSavedBalance(network)-sendAmount-sendFee).toPrecision(12)) );
     }
     
     $( "#inputModalSendFee" ).on('input', onChangeFee);
        
     onChangeFee();   
-    /*var sendAmount = parseFloat($( "#inputModalSendAmount" ).val());
-    if (isNaN(sendAmount))
-        sendAmount = 0.0;
-        
-    var sendFee = parseFloat($( '#inputModalSendFee' ).val());
-    if (isNaN(sendFee))
-    {
-        sendFee = utils.coinsInfo[network].fee;
-        $( '#inputModalSendFee' )[0].placeholder = sendFee;
-        $('.spanRecommendedFee').text('(recommended minimum '+sendFee+' )');
-    }
-                
-    const fNewBalance = utils.getSavedBalance(network)-sendAmount-sendFee;
-    $('#spanModalBalance').text(fNewBalance+" " + strCoinShortName);*/
-                
+
     jQuery('#send_coins_to').modal('show');
    
-//    $('.inputModalSendAddress')[0].textContent = address;
-//    $('.ulAddress')[0].innerHTML = '';
 };
 
 $('#btnSendCoinsReady').click(function () {
@@ -140,6 +129,7 @@ $('#btnSendCoinsReady').click(function () {
         {
             console.log("getUnspentTransaction failed data="+(data?JSON.stringify(data):"null"))
             alerts.Alert("Error", "Сan not find unspent transaction for the '"+utils.coinsInfo[network].name+"' network. Please try again later.");
+            require('./app').RefreshKeyPairsBalance(network);
             return;
         }
         console.log("getUnspentTransactions success. data="+JSON.stringify(data));
@@ -188,6 +178,7 @@ $('#btnSendCoinsReady').click(function () {
         if (current_amount < dFullSentAmount+sendFee)
         {
             alerts.Alert('Error', 'Bad (too big) send amount!');
+            require('./app').RefreshKeyPairsBalance(network);
             return;
         }
         

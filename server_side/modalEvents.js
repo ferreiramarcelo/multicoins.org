@@ -68,9 +68,9 @@ $('#send_coins_to').on('show.bs.modal', function () {
             var sendFee = parseFloat($( '#inputModalSendFee' ).val());
             if (isNaN(sendFee))
                 sendFee = 0.0;
-                    
-            $('#spanModalBalance').text(utils.getSavedBalance(network)-sendAmount-sendFee);
             
+            require('./sendTransaction').ChangeBalance(
+                parseFloat( (utils.getSavedBalance(network)-sendAmount-sendFee).toPrecision(12)) );
         }
         
         var btnAdd = $('<button type="button" class="btn btn-default buttonPlusAddressForSendTo" aria-label="Left Align"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>');

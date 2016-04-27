@@ -35,16 +35,21 @@ exports.pushTransaction = function(hexTX)
       });   
 };
 
+function GetUnconfirmedTransactions(arrayAddr, callback)
+{
+    $.getJSON( urlAPI + "unconfirmed/" + arrayAddr.toString(), function(data2) {
+        callback(exports.netID, data2.data);
+    }).fail(function() {
+        callback(exports.netID, utils.JSONreturn(false, 'error'));
+    });      
+}
+
 exports.getTransactions = function(arrayAddr, callback)
 {
     $.getJSON( urlAPI  + "txs/" + arrayAddr.toString(), function(data) {
         callback(exports.netID, data.data);
         
-        $.getJSON( urlAPI + "unconfirmed/" + arrayAddr.toString(), function(data2) {
-            callback(exports.netID, data2.data);
-        }).fail(function() {
-            callback(exports.netID, utils.JSONreturn(false, 'error'));
-        });      
+        GetUnconfirmedTransactions(arrayAddr, callback);
     }).fail(function() {
         callback(exports.netID, utils.JSONreturn(false, 'error'));
     });   
