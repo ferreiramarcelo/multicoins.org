@@ -68,7 +68,7 @@ exports.RefreshEncodeWalletTab = function()
     $('#info_encrypt_status').removeClass('info');
     if (savedPassword)
     {
-        $('#info_encrypt_status').html('<h4>Your wallet is Encrypt!</h4>');
+        $('#info_encrypt_status').html('<h4>Your wallet is Encrypted!</h4>');
         $('#info_encrypt_note').html('Enter your password to Decrypt the wallet.');
         $('#submitEncryptWallet').html('Decrypt wallet');
         $('#divEncryptPassword2').hide();
