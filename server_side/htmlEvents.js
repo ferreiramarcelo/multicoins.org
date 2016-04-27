@@ -82,7 +82,7 @@ $('#submitEncryptWallet').click(function(e){
     $('#divEncryptPassword2').removeClass('has-error');
     if ((password.localeCompare($('#inputEncryptPassword2').val()) != 0 || !password.length ) && !savedPassword.length)
     {
-        alert('Passwords do not match or empty');
+        alerts.Alert("Error", 'Passwords do not match or empty');
         $('#divEncryptPassword2').addClass('has-error');
         return;
     }
@@ -94,14 +94,14 @@ $('#submitEncryptWallet').click(function(e){
         if (app.EncodeWallet(password))
             utils.setEncodePassword(password);
         else
-            alert('Encode error!');
+            alerts.Alert('Error', 'Encrypt error!');
     }
     else
     {
         if (app.DecodeWallet(password))
             utils.setEncodePassword("");
         else
-            alert('Decode error!');
+            alerts.Alert('Error', 'Decrypt error!');
     }
    // utils.HideSpinner();
     

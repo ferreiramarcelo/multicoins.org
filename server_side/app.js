@@ -68,9 +68,9 @@ exports.RefreshEncodeWalletTab = function()
     $('#info_encrypt_status').removeClass('info');
     if (savedPassword)
     {
-        $('#info_encrypt_status').html('<h4>Your wallet is encoded!</h4>');
-        $('#info_encrypt_note').html('Enter your password to decode wallet.');
-        $('#submitEncryptWallet').html('Decode wallet');
+        $('#info_encrypt_status').html('<h4>Your wallet is Encrypt!</h4>');
+        $('#info_encrypt_note').html('Enter your password to Decrypt the wallet.');
+        $('#submitEncryptWallet').html('Decrypt wallet');
         $('#divEncryptPassword2').hide();
         
         $('#divSignMessagePassword').show();
@@ -82,9 +82,9 @@ exports.RefreshEncodeWalletTab = function()
     }
     else
     {
-        $('#info_encrypt_status').html('<h4>Your wallet is decoded!</h4>');
-        $('#info_encrypt_note').html('Enter your password to encode wallet.');
-        $('#submitEncryptWallet').html('Encode wallet');
+        $('#info_encrypt_status').html('<h4>Your wallet is Decrypted!</h4>');
+        $('#info_encrypt_note').html('Enter your password to Encrypt the wallet.');
+        $('#submitEncryptWallet').html('Encrypt wallet');
         $('#divEncryptPassword2').show();
         
         $('#divSignMessagePassword').hide();
