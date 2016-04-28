@@ -7,6 +7,8 @@ const $ = require('jquery');
 
 exports.ChangeBalance = function(fNewBalance)
 {
+    if (fNewBalance < 1.e-12) fNewBalance = 0;
+    
     $('#spanModalBalance').text(fNewBalance);
     
     $('.groupBalance').removeClass('has-error');
@@ -35,16 +37,17 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
     {
         var sendFee = parseFloat($( '#inputModalSendFee' ).val());
         if (isNaN(sendFee))
-        {
             sendFee = parseFloat(utils.coinsInfo[network].fee.toPrecision(12));
-            $('#inputModalSendFee').val(sendFee);
-            $('#inputModalSendFee')[0].placeholder = sendFee;
-            $('.spanRecommendedFee').text('(recommended minimum '+sendFee+' )');
-        }
-                
+        else
+            sendFee = parseFloat(sendFee.toPrecision(12));
+
+        $('#inputModalSendFee').val(sendFee);
+        $('#inputModalSendFee')[0].placeholder = sendFee;
+        $('.spanRecommendedFee').text('(recommended minimum '+sendFee+' )');
+
         var sendAmount = parseFloat($( "#inputModalSendAmount" ).val());
         if (isNaN(sendAmount))
-            sendAmount = 0.0;
+            sendAmount = 0;
 
         exports.ChangeBalance(
             parseFloat( (utils.getSavedBalance(network)-sendAmount-sendFee).toPrecision(12)) );
@@ -173,6 +176,11 @@ $('#btnSendCoinsReady').click(function () {
             if (current_amount >= dFullSentAmount+sendFee)
                 break;
         }
+        
+        dFullSentAmount = utils.MakeFloat(dFullSentAmount);
+        sendFee = utils.MakeFloat(sendFee);
+        current_amount = utils.MakeFloat(current_amount);
+        
         console.log('current_amount='+current_amount);
         
         if (current_amount < dFullSentAmount+sendFee)
@@ -195,26 +203,20 @@ $('#btnSendCoinsReady').click(function () {
             fRealSendAmount += parseFloat(item.sendAmount);
         });
         
-        //var fRealSendAmount = parseFloat(sendAmount);
+        fRealSendAmount = utils.MakeFloat(fRealSendAmount);
+        
         if (fRealSendAmount > current_amount)
             fRealSendAmount = current_amount;
             
-        //new_transaction.addOutput(addressSendTo, parseInt(fRealSendAmount/0.00000001));
+        const fChange = utils.MakeFloat(parseFloat(current_amount) - fRealSendAmount - parseFloat(sendFee));
         
-        var fChange = parseFloat(current_amount) - fRealSendAmount - parseFloat(sendFee);
-        if (fChange > 0.0 && address_for_change.length)
+        if (fChange > 1.e-10 && address_for_change.length)
         {
             const amount = utils.coinsInfo[network].GetOutTxAmount(fChange);
-           // new_transaction.addOutput(address_for_change, parseInt(fChange/0.00000001));
             new_transaction.addOutput(address_for_change, amount);
         }
 
         //Sign
-        /*for (var index in mapIndexToPrivateKey)
-        {
-            //console.log('index='+index+);
-            new_transaction.sign(parseInt(index), mapIndexToPrivateKey[index]);
-        }*/
         for (var i=0; i<aSignArray.length; i++)
         {
             new_transaction.sign(i, aSignArray[i]);

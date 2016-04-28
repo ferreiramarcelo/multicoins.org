@@ -14,9 +14,9 @@ exports.fee = 0.001;
 
 exports.getBalance = function(arrayAddr, callback)
 {
-    console.log('get balance ' + urlAPI + "balance/" + arrayAddr.toString() + "?confirmations=0");
+    console.log('get balance ' + urlAPI + "balance/" + arrayAddr.toString() + "?confirmations=1");
     
-    $.getJSON( urlAPI + "balance/" + arrayAddr.toString() + "?confirmations=0", function(data) {
+    $.getJSON( urlAPI + "balance/" + arrayAddr.toString() + "?confirmations=1", function(data) {
         callback(data);
     })
       .fail(function() {
@@ -27,7 +27,7 @@ exports.getBalance = function(arrayAddr, callback)
 exports.pushTransaction = function(hexTX)
 {
     console.log('pushTransaction' + hexTX);
-   // alert(hexTX)
+    //alert(hexTX)
     $.post( urlAPIpush, { "hex": hexTX })
       .done(function( data ) {
         //alert( "Data Loaded: " + JSON.stringify(data) );

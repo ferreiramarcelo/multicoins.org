@@ -238,7 +238,9 @@ exports.updateTransactions = function(callback)
                     if (data.unconfirmed)
                     {
                         data.unconfirmed.forEach(function(element) {
-                            jsonSavedKeyPairs[element.address].txs.push(element);
+                            //jsonSavedKeyPairs[element.address].txs.push(element);
+                            const address = element.address || data.address;
+                            jsonSavedKeyPairs[address].txs.push(element);
                         });
                     }
                 }
@@ -376,3 +378,15 @@ exports.ShowSpinner = function()
     $preloader.show();*/
     $('#page-preloader').show();
 };
+
+exports.MakeFloat = function(str)
+{
+    const f = parseFloat(str);
+    if (isNaN(f) || Math.abs(f) < 1.e-12)
+        return 0;
+        
+    const ret = parseFloat(f.toPrecision(12));
+    if (Math.abs(ret) < 1.e-12)
+        return 0;
+    return ret;
+}

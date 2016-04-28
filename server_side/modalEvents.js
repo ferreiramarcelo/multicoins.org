@@ -63,11 +63,13 @@ $('#send_coins_to').on('show.bs.modal', function () {
         inputAmount[0].oninput = function() {
             var sendAmount = parseFloat($( this ).val());
             if (isNaN(sendAmount))
-                sendAmount = 0.0;
+                sendAmount = 0;
                         
             var sendFee = parseFloat($( '#inputModalSendFee' ).val());
             if (isNaN(sendFee))
-                sendFee = 0.0;
+                sendFee = 0;
+            else
+                sendFee = parseFloat(sendFee.toPrecision(12));
             
             require('./sendTransaction').ChangeBalance(
                 parseFloat( (utils.getSavedBalance(network)-sendAmount-sendFee).toPrecision(12)) );
