@@ -24,7 +24,7 @@ exports.getBalance = function(arrayAddr, callback)
     $.getJSON( 'https://api.blockcypher.com/v1/doge/main/addrs/'+addrs+'/balance' + token, function(data) {
         data = [].concat(data);
         data.forEach(function(element) {
-            element.balance = (parseFloat(element.balance)/100000000.0).toFixed(8);
+            element.balance = (parseFloat(element.final_balance)/100000000.0).toFixed(8);
         });
         callback({status: 'success', data: data});
     })
@@ -63,11 +63,15 @@ exports.getTransactions = function(arrayAddr, callback)
     $.getJSON( 'https://api.blockcypher.com/v1/doge/main/addrs/'+addrs + token + "&confirmations=0", function(data) {
         data = [].concat(data);
         data.forEach(function(element) {
-            element.balance = (parseFloat(element.balance)/100000000.0).toFixed(8);
+            element.balance = (parseFloat(element.final_balance)/100000000.0).toFixed(8);
             element.txs = element.txrefs || [];
+            
+            if (element.unconfirmed_txrefs)
+                element.txs = element.txs.concat(element.unconfirmed_txrefs);
+                
             element.txs.forEach(function(tx) {
                 tx.tx = tx.tx_hash;
-                tx.time_utc = tx.confirmed;
+                tx.time_utc = tx.confirmed || tx.received;
                 tx.amount = (parseFloat(tx.value)/100000000.0).toFixed(8);
                 if (tx.tx_output_n < 0)
                     tx.amount = -1.0*tx.amount;
@@ -75,11 +79,6 @@ exports.getTransactions = function(arrayAddr, callback)
         });
         callback(exports.netID, data);
         
-        /*$.getJSON( urlAPI + "unconfirmed/" + arrayAddr.toString(), function(data2) {
-            callback(exports.netID, data2.data);
-        }).fail(function() {
-            callback(exports.netID, utils.JSONreturn(false, 'error'));
-        }); */     
     }).fail(function() {
         callback(exports.netID, utils.JSONreturn(false, 'error'));
     });   

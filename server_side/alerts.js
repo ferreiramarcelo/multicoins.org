@@ -6,21 +6,22 @@ exports.ModalDialog = function(id, title, body, onok, oncancel)
   const close_button = $('<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>');
   
   const footer = $('<div class="modal-footer"></div>');
-  if (onok) 
-  {
-    ok_button.click(function() {
-      onok();
-    });
-    footer.append(ok_button);
-  }
-
-  if (oncancel) 
-  {
-    close_button.click(function() {
-      oncancel();
-    });
-  }
   
+  //const strID = '#' + id;
+ 
+  ok_button.click(function() {
+      //$(strID).remove();
+      if (onok) onok();
+  });
+  
+  close_button.click(function() {
+      //$(strID).remove();
+      if (oncancel) oncancel();
+  });
+
+  if (onok) 
+    footer.append(ok_button);
+
   footer.append(close_button);
   
   const $html = $(
@@ -37,12 +38,12 @@ exports.ModalDialog = function(id, title, body, onok, oncancel)
           )
   );
     
-    $('#' + id).remove();
+  $('#' + id).remove();
     
-    $( "body" ).append($html);
+  $( "body" ).append($html);
 
   
-    return jQuery('#' + id);
+  return jQuery('#' + id);
 };
 
 exports.OnTransactionSent = function(result)
@@ -87,32 +88,10 @@ exports.Alert = function(title, message, onok, oncancel)
   const strMessage = message || "";
   const id = "SimpleAlert";
   
+  jQuery('#' + id).modal('hide');    
+
   exports.ModalDialog(id, strTitle, '<div>'+strMessage+'</div>', onok, oncancel);
   
-  /*  const $html = $(
-        '<div class="modal fade" id="'+id+'" tabindex="-1" role="dialog" aria-labelledby="OnTransactionSentLabel">'+
-          '<div class="modal-dialog" role="document">'+
-            '<div class="modal-content">'+
-              '<div class="modal-header">'+
-                '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
-                '<h4 class="modal-title" id="OnTransactionSentLabel">'+strTitle+'</h4>'+
-              '</div>'+
-              '<div class="modal-body">'+
-                '<div>'+strMessage+'</div>'+
-              '</div>'+
-              '<div class="modal-footer">'+
-                '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
-             '</div>'+
-            '</div>'+
-          '</div>'+
-        '</div>'
-    );
-    
-    $('#SimpleAlert').remove();
-    
-    $( "body" ).append($html);*/
-    
-    
   jQuery('#' + id).modal('show');    
   
 }

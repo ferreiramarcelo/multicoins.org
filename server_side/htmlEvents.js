@@ -163,26 +163,33 @@ $('#submitBackup').click(function(e){
     const db = onBackupOrRestore();
     if (!db) return;
     
-    var jsonSavedKeyPairs = utils.getItem("KeyPairs").value || {};
+    alerts.Alert(
+        'Warning', 
+        '<p class="bg-danger">This action will destroy the previous backup! </p><b>Аre you sure?</b> ',
+        function() {
+            var jsonSavedKeyPairs = utils.getItem("KeyPairs").value || {};
+            
+            for (var key in jsonSavedKeyPairs)
+                jsonSavedKeyPairs[key].txs = [];
+        
+            utils.ShowSpinner();
+            
+            db.ref.set({
+        	  uid: db.uid,
+        	  keypairs: jsonSavedKeyPairs,
+        	  pubkeys: utils.getItem("PublicKeys").value || {},
+        	  security: utils.getItem("Security").value || {}
+            }, function(error) {
+                if (error) {
+                    alerts.Alert("Error !", "Data could not be saved." + error);
+                } else {
+                    alerts.Alert("Success !", "Data saved successfully.");
+                }  
+                utils.HideSpinner();
+            });
+        },
+        function() {});
     
-    for (var key in jsonSavedKeyPairs)
-        jsonSavedKeyPairs[key].txs = [];
-
-    utils.ShowSpinner();
-    
-    db.ref.set({
-	  uid: db.uid,
-	  keypairs: jsonSavedKeyPairs,
-	  pubkeys: utils.getItem("PublicKeys").value || {},
-	  security: utils.getItem("Security").value || {}
-    }, function(error) {
-        if (error) {
-            alerts.Alert("Error !", "Data could not be saved." + error);
-        } else {
-            alerts.Alert("Success !", "Data saved successfully.");
-        }  
-        utils.HideSpinner();
-    });
 });
 
 $('#submitRestore').click(function(e){
