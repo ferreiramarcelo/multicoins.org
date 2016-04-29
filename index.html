@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <script>
-      if (window.location.protocol != "https:")
+      if (window.location.protocol != "https:" && window.location.protocol != "file:")
           window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
     </script>
 
@@ -33,12 +33,18 @@
     <div id="page-preloader-info" class="loader-info">Loading...</div>
 
     <div class="container-fluid">
+      <div class="container">
+        <div class="row">
+          <center>
+            <iframe data-aa='165013' src='https://ad.a-ads.com/165013?size=468x60' scrolling='no' style='width:468px; height:60px; border:0px; padding:0;overflow:hidden' allowtransparency='true' frameborder='0'></iframe>
+          </center>
+        </div>
+      </div>
 
       <div class="starter-template">
         <h1>Multicoins - wallet</h1>
-        <p class="lead">Open source JavaScript Bitcoin, Testnet and Litecoin wallet</p>
+        <p class="lead">Open source JavaScript Bitcoin and alt-coins wallet</p>
       </div>
-      
       
       <div class="container">
         <nav id='top_nav' class="navbar navbar-default navbar-static-top">
@@ -114,7 +120,7 @@
               <!-- Security -->
               <div id='tab_security' style="display:none">
                 <ul class="nav nav-tabs">
-                  <li class="active"><a href="#tab_encrypt_wallet" data-toggle="tab">Encode/Decode wallet</a></li>
+                  <li class="active"><a href="#tab_encrypt_wallet" data-toggle="tab">Encrypt/Decrypt wallet</a></li>
                   <li><a href="#tab_backup_wallet" data-toggle="tab">Backup/Restore wallet</a></li>
                 </ul>
                 
@@ -627,7 +633,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script src="js/wallet_loader.js"></script>
-    <!--<script src='/js/wallet.js'></script>-->
+    <!--<script src="js/wallet_loader.js"></script>-->
+    <script src='/js/wallet.js'></script>
   </body>
 </html>
