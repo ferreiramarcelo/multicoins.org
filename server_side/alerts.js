@@ -7,16 +7,22 @@ exports.ModalDialog = function(id, title, body, onok, oncancel)
   
   const footer = $('<div class="modal-footer"></div>');
   
-  //const strID = '#' + id;
+  const strID = '#' + id;
  
   ok_button.click(function() {
       //$(strID).remove();
-      if (onok) onok();
+      if (onok) {
+        jQuery(strID).modal('hide');
+        setTimeout(onok, 10);
+      }
   });
   
   close_button.click(function() {
       //$(strID).remove();
-      if (oncancel) oncancel();
+      if (oncancel) {
+        jQuery(strID).modal('hide');
+        setTimeout(oncancel, 10);
+      }
   });
 
   if (onok) 
@@ -90,8 +96,10 @@ exports.Alert = function(title, message, onok, oncancel)
   
   jQuery('#' + id).modal('hide');    
 
-  exports.ModalDialog(id, strTitle, '<div>'+strMessage+'</div>', onok, oncancel);
-  
-  jQuery('#' + id).modal('show');    
-  
+  //setTimeout(function(){
+    exports.ModalDialog(id, strTitle, '<div>'+strMessage+'</div>', onok, oncancel);
+    
+    jQuery('#' + id).modal('show');    
+  //}, 10);
+
 }

@@ -352,6 +352,32 @@ $('#toolButtonSaveWallet').click(function () {
     jQuery('.nav-tabs a[href="#tab_backup_wallet"]').tab('show');
 });
 
+$('#submitStartAddrGen').click(function () {
+    const mask = jQuery('#inputAddrGenMask').val();
+    if (!mask.length)
+        return;
+        
+    var test = {};
+    var i = 0;
+    const timerId = setInterval(function() {
+        i++;
+        const keyPair = bitcoin.ECPair.makeRandom({network : bitcoin.networks['bitcoin']});
+        const addr = keyPair.getAddress();
+        
+        if (parseInt(i/10000)*10000 == i)
+            jQuery('#inputResultAddrGen').val(addr);
+        
+       // if (!test[addr[2]]) test[addr[2]] = 0;
+       // test[addr[2]]++;
+        
+        if (addr.indexOf(mask) == 0)
+        {
+            clearInterval(timerId);
+            alert('ok');
+        }
+    }, 1);
+    
+});
 
 
 //browserify ~/workspace/server_side/htmlEvents.js ~/workspace/server_side/modalEvents.js | uglifyjs -s htmlEvents > ~/workspace/site/js/wallet.js
