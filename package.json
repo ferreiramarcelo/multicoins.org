@@ -32,5 +32,11 @@
     "int": "^0.2.0",
     "jquery": "^2.2.1",
     "body-parser": "^1.0.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2"
   }
 }
