@@ -104,6 +104,9 @@ exports.UpdateBalanceTable = function()
     $( "#tab_tab_balance" ).html('');
     for (var key in utils.coinsInfo)
     {
+        if (key == 0x05)
+            continue;
+            
         const coin = key;
 
         if (!jsonSavedSettings["filterCoins"][utils.coinsInfo[key].name])
