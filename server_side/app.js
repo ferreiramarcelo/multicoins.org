@@ -171,9 +171,44 @@ exports.UpdateKeyPairsTableHTML = function()
         
         tdPublic[0].onclick = function() {
             if (utils.getSavedEncodePassword())
-                alerts.Alert("Your uncompressed public key", "To get uncompressed public key please decrypt your wallet");
+                alerts.Alert(
+                    "Your address info", 
+                    "<form><div class='form-group'>"+
+                        "<label class='control-label'>Your public address</label>"+
+                        "<div class='row' style='overflow: auto'><div class='col-md-12'>"+
+                            "<p class='form-control-static'>"+address+"</p>"+
+                        "</div></div>"+
+                    "</div><div class='form-group'>"+
+                        "<label class='control-label'>Your compressed public key</label>"+
+                        "<div class='row' style='overflow: auto'><div class='col-md-12'>"+
+                            "<p class='form-control-static'>To get compressed public key please decrypt your wallet</p>"+
+                        "</div></div>"+
+                    "</div><div class='form-group'>"+
+                        "<label class='control-label'>Your uncompressed public key</label>"+
+                        "<div class='row' style='overflow: auto'><div class='col-md-12'>"+
+                            "<p class='form-control-static'>To get uncompressed public key please decrypt your wallet</p>"+
+                        "</div></div>"+
+                    "</div></form>");
             else
-                alerts.Alert("Your uncompressed public key", "<div class='row' style='overflow: auto'><div class='col-md-12'>"+utils.getKeyPairFromWIF(privkey).Q.getEncoded(false).toString('hex')+"</div></div>");
+                alerts.Alert(
+                    "Your address info", 
+                    "<form><div class='form-group'>"+
+                        "<label class='control-label'>Your public address</label>"+
+                        "<div class='row' style='overflow: auto'><div class='col-md-12'>"+
+                            "<p class='form-control-static'>"+address+"</p>"+
+                        "</div></div>"+
+                    "</div><div class='form-group'>"+
+                        "<label class='control-label'>Your compressed public key</label>"+
+                        "<div class='row' style='overflow: auto'><div class='col-md-12'>"+
+                            "<p class='form-control-static'>"+utils.getKeyPairFromWIF(privkey).Q.getEncoded(true).toString('hex')+"</p>"+
+                        "</div></div>"+
+                    "</div><div class='form-group'>"+
+                        "<label class='control-label'>Your uncompressed public key</label>"+
+                        "<div class='row' style='overflow: auto'><div class='col-md-12'>"+
+                            "<p class='form-control-static'>"+utils.getKeyPairFromWIF(privkey).Q.getEncoded(false).toString('hex')+"</p>"+
+                        "</div></div>"+
+                    "</div></form>");
+                //alerts.Alert("Your uncompressed public key", "<div class='row' style='overflow: auto'><div class='col-md-12'>"+utils.getKeyPairFromWIF(privkey).Q.getEncoded(false).toString('hex')+"</div></div>");
         };
         
         tdPrivate[0].onclick = function() {
