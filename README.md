@@ -20,6 +20,10 @@ To start server:
 
 "browserify --debug /node_modules/multicoins/server_side/htmlEvents.js /node_modules/multicoins/server_side/modalEvents.js -s htmlEvents > /node_modules/multicoins/site/js/wallet.js"
 
+Life version: https://multicoins.org
+
+Offline version: https://github.com/3s3s/multicoins.org/tree/gh-pages
+
 
 
 
