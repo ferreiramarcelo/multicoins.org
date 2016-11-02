@@ -60,3 +60,8 @@ process.on('uncaughtException', function (err) {
 });
 
 //scp -r ./site/ test@3s3s.org:/home/test/multicoins/
+//git checkout gh-pages
+//git checkout master site
+//npm version 1.0.10
+//npm login
+//npm publish
