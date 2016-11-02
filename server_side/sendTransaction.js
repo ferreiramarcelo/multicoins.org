@@ -35,11 +35,17 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
     
     function onChangeFee()
     {
-        var sendFee = parseFloat($( '#inputModalSendFee' ).val());
+        var fee = $( '#inputModalSendFee' ).val().replace(/[^\d.-]/g, '');
+        var sendFee = parseFloat(fee);
         if (isNaN(sendFee))
             sendFee = parseFloat(utils.coinsInfo[network].fee.toPrecision(12));
         else
-            sendFee = parseFloat(sendFee.toPrecision(12));
+        {
+            if ((sendFee+"").length >=12)
+                sendFee = parseFloat(sendFee.toPrecision(12));
+            else
+                sendFee = fee;
+        }
 
         $('#inputModalSendFee').val(sendFee);
         $('#inputModalSendFee')[0].placeholder = sendFee;
