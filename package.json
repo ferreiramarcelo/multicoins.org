@@ -1,6 +1,6 @@
 {
   "name": "multicoins",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Open source Javascript wallet for Bitcoin and Altcoins",
   "main": "main.js",
   "scripts": {
