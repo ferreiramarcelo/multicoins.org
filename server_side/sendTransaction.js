@@ -49,7 +49,7 @@ exports.onOpenDialog = function(network, address, strLabel, strCoinShortName)
 
         $('#inputModalSendFee').val(sendFee);
         $('#inputModalSendFee')[0].placeholder = sendFee;
-        $('.spanRecommendedFee').text('(recommended minimum '+sendFee+' )');
+        $('.spanRecommendedFee').text('(recommended minimum '+parseFloat(utils.coinsInfo[network].fee.toPrecision(12))+' )');
 
         var sendAmount = parseFloat($( "#inputModalSendAmount" ).val());
         if (isNaN(sendAmount))
