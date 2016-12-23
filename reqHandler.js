@@ -1,14 +1,19 @@
 'use strict';
 
 var utils = require("./utils");
+const url = require('url');
+const g_constants = require('./constants');
 
 exports.handle = function(app)
 {
     app.get('/', function (req, res) {res.render('index.html');});
-
+   
+    app.get('*.blockr.io/api/v1/address/*', httpProxy);
+    app.post('*.blockr.io/api/v1/tx/push', httpProxy);
+    
     app.post('/api/v1/tx/push/ppc', function (req, res) {
         var strJSON = '{"jsonrpc": "1.0", "id":"curltest", "method": "sendrawtransaction", "params": ["'+req.body.hex+'"] }';
-        utils.postString("multicoins.org", 9902, "/", {'Content-Type': 'text/plain', 'Authorization': 'Basic a3p2OnEyMjEw'}, strJSON, function(result) {
+        utils.postString(g_constants.my_domain, 9902, "/", {'Content-Type': 'text/plain', 'Authorization': 'Basic a3p2OnEyMjEw'}, strJSON, function(result) {
             if (result.data)
             {
                 try {
@@ -36,3 +41,84 @@ exports.handle = function(app)
         });
     });
 };
+
+function httpProxy(req, res)
+{
+    var ph = url.parse(req.url);
+    const host = ph.path.substr(1, ph.path.indexOf('/', 1)-1);
+    const path = ph.path.substr(ph.path.indexOf('/', 1));
+    
+    if (req.method == 'POST')
+    {
+        const str = '{"hex" : "'+req.body.hex+'"}';
+        utils.postJSON(host, path, str, function(err){
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(err.data);
+        })
+        return;
+    }
+
+    var options = {
+        port: 80,
+        hostname: host,
+        method: req.method,
+        path: path,
+        headers: req.headers
+    };
+    options.headers.host = host;
+    
+    var proxyRequest = require("http").request(options);
+    
+    proxyRequest.on('response', function(proxyResponse) {
+        
+		res.writeHead(proxyResponse.statusCode, proxyResponse.headers);
+		
+		proxyResponse.on('data', function(chunk) {
+			res.write(chunk, 'binary');
+        });
+        proxyResponse.on('end', function() { 
+			res.end();
+		});
+    });
+    
+    req.on('data', function(chunk) {
+        proxyRequest.write(chunk, 'binary');
+    });
+    
+    req.on('end', function() { 
+        proxyRequest.end() 
+    });
+    
+	proxyRequest.on('error', function(e) {
+		console.log('proxyRequest error' + JSON.stringify(e));
+		res.end(JSON.stringify(e));
+	});   
+	
+	/*if (req.body && req.body.hex)
+	    proxyRequest.end('{"hex" : "'+req.body.hex+'"}');*/
+}
+
+/*function GetTBitcoinAddress(req, res)
+{
+    
+}
+function GetLitecoinAddress(req, res)
+{
+    
+}
+function GetPeercoinAddress(req, res)
+{
+    
+}
+function PushBitcoin(req, res)
+{
+    
+}
+function PushTBitcoin(req, res)
+{
+    
+}
+function PushLitecoin(req, res)
+{
+    
+}*/

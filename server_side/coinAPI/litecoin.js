@@ -1,11 +1,12 @@
 'use strict';
 
+const g_constants = require('../../constants');
 const utils = require('../utils.js');
 const alerts = require('../alerts');
 const $ = require('jquery');
 
-const urlAPI = "https://ltc.blockr.io/api/v1/address/";
-const urlAPIpush = "https://ltc.blockr.io/api/v1/tx/push";
+const urlAPI = "https://"+g_constants.my_domain+"/ltc.blockr.io/api/v1/address/";
+const urlAPIpush = "https://"+g_constants.my_domain+"/ltc.blockr.io/api/v1/tx/push";
 
 exports.netID = 0x30;
 exports.name = "litecoin";
