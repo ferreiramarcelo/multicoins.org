@@ -8,12 +8,13 @@ const alerts = require('./alerts');
 const $ = require('jquery');
 
 exports.coinsInfo = {
-        0x00 : require("./coinAPI/bitcoin"),
+       /* 0x00 : require("./coinAPI/bitcoin"),
         0x05 : require("./coinAPI/bitcoin"),
         0x30 : require("./coinAPI/litecoin"), 
         0x1e : require("./coinAPI/dogecoin"),
         0x6f : require("./coinAPI/bitcoin_test"), 
-        0x37 : require("./coinAPI/peercoin")
+        0x37 : require("./coinAPI/peercoin"),*/
+        0x5c : require("./coinAPI/e51")
     };
 
 exports.scryptParams = {
