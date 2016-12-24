@@ -3,22 +3,25 @@ Open source JavaScript Bitcoin, Testnet and Litecoin wallet
 
 To start server:
 
-1. npm install multicoins
+1. git clone https://github.com/3s3s/multicoins.org.git
 
-2. cd ./node_modules/multicoins
+2. cd ./multicoins.org
 
-3. node main.js
+3. npm update
+
+4. node main.js 
 
 
-"/node_modules/multicoins/main.js" - web server
 
-"/node_modules/multicoins/constants.js" - http and https ports (you can change it)
+"./multicoins.org/main.js" - web server
 
-"/node_modules/multicoins/site/index.html" - main page
+"./multicoins.orgs/constants.js" - http and https ports (you can change it)
 
-"/node_modules/multicoins/site/js/wallet.js" - main javascript. This script generate from "server_side" folder by command: 
+"./multicoins.org/site/index.html" - main page
 
-"browserify --debug /node_modules/multicoins/server_side/htmlEvents.js /node_modules/multicoins/server_side/modalEvents.js -s htmlEvents > /node_modules/multicoins/site/js/wallet.js"
+"./multicoins.org/site/js/wallet.js" - main javascript. This script generate from "server_side" folder by command: 
+
+"browserify --debug ./multicoins.org/server_side/htmlEvents.js ./multicoins.org/server_side/modalEvents.js -s htmlEvents > ./multicoins.org/site/js/wallet.js"
 
 Life version: https://multicoins.org
 
