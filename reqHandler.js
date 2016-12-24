@@ -52,8 +52,6 @@ function httpProxy(req, res)
     {
         const str = '{"hex" : "'+req.body.hex+'"}';
         utils.postJSON(host, path, str, function(err){
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.writeHead(200, {"Content-Type": "application/json"});
             res.end(err.data);
         })
@@ -73,8 +71,6 @@ function httpProxy(req, res)
     
     proxyRequest.on('response', function(proxyResponse) {
         
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         res.writeHead(proxyResponse.statusCode, proxyResponse.headers);
 		
 		proxyResponse.on('data', function(chunk) {
