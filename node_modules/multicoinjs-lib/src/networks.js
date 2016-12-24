@@ -97,6 +97,18 @@ module.exports = {
     wif: 0x80, // https://github.com/ivansib/sibcoin/blob/master/src/chainparams.cpp#L174
     dustThreshold: 5460, // https://github.com/ivansib/sibcoin/blob/master/src/primitives/transaction.h#L144-L155
     isPoS: false
+  },
+  e51: {
+    messagePrefix: '\x14E51 Signed Message:\n',
+    bip32: {
+      public: 0x04088B21E, 
+      private: 0x0488ade4 
+    },
+    pubKeyHash: 0x5c, 
+    scriptHash: 0x06, 
+    wif: 0x81, 
+    dustThreshold: 546, 
+    isPoS: false
   }
   
 }

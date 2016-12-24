@@ -59,7 +59,7 @@ process.on('uncaughtException', function (err) {
   console.log("Node NOT Exiting...");
 });
 
-//scp -r ./site/ test@3s3s.org:/home/test/multicoins/
+//scp -r ./site/ test@3s3s.org:/home/test/multicoins.org/
 //git checkout gh-pages
 //git checkout master site
 //npm version 1.0.10
