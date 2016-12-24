@@ -3,6 +3,8 @@
 var fs = require('fs');
 var http = require('http');
 var https = require('https');
+var cors = require('cors');
+
 var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
 var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
 
@@ -15,6 +17,8 @@ var credentials = {
 
 var express = require('express');
 var app = express();
+
+app.use(cors()); 
 
 var bodyParser = require('body-parser');
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
