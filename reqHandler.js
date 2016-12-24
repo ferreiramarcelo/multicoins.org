@@ -52,6 +52,8 @@ function httpProxy(req, res)
     {
         const str = '{"hex" : "'+req.body.hex+'"}';
         utils.postJSON(host, path, str, function(err){
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.writeHead(200, {"Content-Type": "application/json"});
             res.end(err.data);
         })
@@ -71,7 +73,9 @@ function httpProxy(req, res)
     
     proxyRequest.on('response', function(proxyResponse) {
         
-		res.writeHead(proxyResponse.statusCode, proxyResponse.headers);
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.writeHead(proxyResponse.statusCode, proxyResponse.headers);
 		
 		proxyResponse.on('data', function(chunk) {
 			res.write(chunk, 'binary');
@@ -98,27 +102,3 @@ function httpProxy(req, res)
 	    proxyRequest.end('{"hex" : "'+req.body.hex+'"}');*/
 }
 
-/*function GetTBitcoinAddress(req, res)
-{
-    
-}
-function GetLitecoinAddress(req, res)
-{
-    
-}
-function GetPeercoinAddress(req, res)
-{
-    
-}
-function PushBitcoin(req, res)
-{
-    
-}
-function PushTBitcoin(req, res)
-{
-    
-}
-function PushLitecoin(req, res)
-{
-    
-}*/

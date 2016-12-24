@@ -26,7 +26,6 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
-    //res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 
