@@ -15,7 +15,7 @@ var credentials = {
 };
 
 var express = require('express');
-var app = express();
+var app = express(), cors = require('cors');
 
 
 var bodyParser = require('body-parser');
@@ -24,8 +24,10 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 })); 
 
+app.use(cors());
+
 // Add headers
-app.use(function (req, res, next) {
+/*app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -43,7 +45,7 @@ app.use(function (req, res, next) {
 
     // Pass to next layer of middleware
     next();
-});
+});*/
 
 // your express configuration here
 
