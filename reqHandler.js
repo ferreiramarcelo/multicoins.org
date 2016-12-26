@@ -67,10 +67,11 @@ function httpProxy(req, res)
     };
     options.headers.host = host;
     
+    console.log('httpProxy: '+JSON.stringify(options));
     var proxyRequest = require("http").request(options);
     
     proxyRequest.on('response', function(proxyResponse) {
-        
+        console.log('proxy response proxyResponse.statusCode='+proxyResponse.statusCode);
         res.writeHead(proxyResponse.statusCode, proxyResponse.headers);
 		
 		proxyResponse.on('data', function(chunk) {
