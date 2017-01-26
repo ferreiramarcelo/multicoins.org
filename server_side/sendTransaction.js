@@ -117,6 +117,8 @@ $('#btnSendCoinsReady').click(function () {
     var addresses = [];
     for (var key in jsonSavedKeyPairs)
     {
+        if (utils.coinsInfo[jsonSavedKeyPairs[key].network] == undefined)
+            continue;
         if (utils.coinsInfo[jsonSavedKeyPairs[key].network] != utils.coinsInfo[network])
             continue;
             

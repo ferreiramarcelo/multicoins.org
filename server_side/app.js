@@ -300,6 +300,9 @@ exports.UpdateTransactionsTableHTML = function()
     {
         const txs = jsonSavedKeyPairs[key].txs || 0;
         if (!txs) continue;
+        
+        if (utils.coinsInfo[jsonSavedKeyPairs[key].network] == undefined)
+            continue;
             
         const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[jsonSavedKeyPairs[key].network].name];
         if (checked == "false")
