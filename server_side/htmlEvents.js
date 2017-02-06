@@ -15,7 +15,8 @@ $(function() {
        $('#'+$(this).attr('open-id')).hide();
     });
     
-    if ((!utils.getItem("KeyPairs").value || !Object.keys(utils.getItem("KeyPairs").value).length) && utils.isValidEncodePassword(""))
+    const pairs = utils.getSavedKeyPairs();
+    if ((!utils.getItem("KeyPairs").value || !Object.keys(utils.getItem("KeyPairs").value).length || !Object.keys(pairs).length) && utils.isValidEncodePassword(""))
     {
         //For new users shgenerate random bitcoin address
         for (var key in utils.coinsInfo)

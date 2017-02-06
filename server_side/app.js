@@ -418,20 +418,7 @@ exports.RefreshKeyPairsBalance = function(network)
 {
     var jsonSavedKeyPairs = utils.getItem("KeyPairs").value || {}; 
     
-    var pairs = {};
-    for (var key in jsonSavedKeyPairs)
-    {
-        if (utils.coinsInfo[jsonSavedKeyPairs[key].network] == undefined)
-            continue;
-            
-        if (pairs[jsonSavedKeyPairs[key].network] == undefined)
-            pairs[jsonSavedKeyPairs[key].network] = [];
-         
-        if (network && utils.coinsInfo[jsonSavedKeyPairs[key].network] != utils.coinsInfo[network])  
-            continue;
-            
-        pairs[jsonSavedKeyPairs[key].network].push( jsonSavedKeyPairs[key].address );
-    }
+    const pairs = utils.getSavedKeyPairs();
     
     for (var keyHash in pairs)
     {
