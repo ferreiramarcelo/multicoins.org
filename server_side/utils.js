@@ -37,6 +37,28 @@ exports.getBIP38 = function(networkID)
     return bip38;
 };
 
+exports.getSavedKeyPairs = function(network)
+{
+    var jsonSavedKeyPairs = exports.getItem("KeyPairs").value || {}; 
+    
+    var pairs = {};
+    for (var key in jsonSavedKeyPairs)
+    {
+        if (exports.coinsInfo[jsonSavedKeyPairs[key].network] == undefined)
+            continue;
+            
+        if (pairs[jsonSavedKeyPairs[key].network] == undefined)
+            pairs[jsonSavedKeyPairs[key].network] = [];
+         
+        if (network && exports.coinsInfo[jsonSavedKeyPairs[key].network] != exports.coinsInfo[network])  
+            continue;
+            
+        pairs[jsonSavedKeyPairs[key].network].push( jsonSavedKeyPairs[key].address );
+    }
+    
+    return pairs;
+};
+
 exports.getKeyPairFromWIF = function(wif)
 {
     console.log('getKeyPairFromWIF wif='+wif);
