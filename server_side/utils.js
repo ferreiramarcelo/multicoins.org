@@ -14,7 +14,7 @@ exports.coinsInfo = {
         0x1e : require("./coinAPI/dogecoin"),
         0x6f : require("./coinAPI/bitcoin_test"), 
         0x37 : require("./coinAPI/peercoin"),*/
-        0x5c : require("./coinAPI/e51")
+        0x3f : require("./coinAPI/smailcoin")
     };
 
 exports.scryptParams = {
@@ -35,6 +35,28 @@ exports.getBIP38 = function(networkID)
     bip38.scryptParams = exports.scryptParams;
     
     return bip38;
+};
+
+exports.getSavedKeyPairs = function(network)
+{
+    var jsonSavedKeyPairs = exports.getItem("KeyPairs").value || {}; 
+    
+    var pairs = {};
+    for (var key in jsonSavedKeyPairs)
+    {
+        if (exports.coinsInfo[jsonSavedKeyPairs[key].network] == undefined)
+            continue;
+            
+        if (pairs[jsonSavedKeyPairs[key].network] == undefined)
+            pairs[jsonSavedKeyPairs[key].network] = [];
+         
+        if (network && exports.coinsInfo[jsonSavedKeyPairs[key].network] != exports.coinsInfo[network])  
+            continue;
+            
+        pairs[jsonSavedKeyPairs[key].network].push( jsonSavedKeyPairs[key].address );
+    }
+    
+    return pairs;
 };
 
 exports.getKeyPairFromWIF = function(wif)

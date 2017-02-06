@@ -109,6 +109,19 @@ module.exports = {
     wif: 0x81, 
     dustThreshold: 546, 
     isPoS: false
+  },
+  smailcoin: {
+    messagePrefix: '\x1ASmailCoin Signed Message:\n',
+    bip32: {
+      public: 0x04088B21E, 
+      private: 0x0488ade4 
+    },
+    pubKeyHash: 0x3F, 
+    scriptHash: 0x06, 
+    wif: 0x81, 
+    dustThreshold: 546, 
+    isPoS: false
   }
+  
   
 }
