@@ -5,6 +5,7 @@ var utils = require("./utils");
 exports.handle = function(app)
 {
     app.get('/', function (req, res) {res.render('index.html');});
+    //app.get('/wallet.html', function (req, res) {res.render('index.html');});
 
     app.post('/api/v1/tx/push/ppc', function (req, res) {
         var strJSON = '{"jsonrpc": "1.0", "id":"curltest", "method": "sendrawtransaction", "params": ["'+req.body.hex+'"] }';
