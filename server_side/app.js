@@ -321,15 +321,15 @@ exports.UpdateTransactionsTableHTML = function()
     
     var groupTXs = {};
     arrayTXs.forEach(function(tx) {
-        if (groupTXs[tx.transaction.tx])
+        /*if (groupTXs[tx.transaction.tx])
         {
             groupTXs[tx.transaction.tx].transaction.amount = 
                 (parseFloat(groupTXs[tx.transaction.tx].transaction.amount) + parseFloat(tx.transaction.amount)).toFixed(8);
         }
         else
-        {
+        {*/
             groupTXs[tx.transaction.tx] = tx;
-        }
+       // }
             
     });
     for (var key in groupTXs)
