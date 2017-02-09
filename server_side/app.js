@@ -324,15 +324,15 @@ exports.UpdateTransactionsTableHTML = function()
     
     var groupTXs = {};
     arrayTXs.forEach(function(tx) {
-        /*if (groupTXs[tx.transaction.tx])
+        if (groupTXs[tx.transaction.tx])
         {
             groupTXs[tx.transaction.tx].transaction.amount = 
                 (parseFloat(groupTXs[tx.transaction.tx].transaction.amount) + parseFloat(tx.transaction.amount)).toFixed(8);
         }
         else
-        {*/
+        {
             groupTXs[tx.transaction.tx] = tx;
-        //}
+        }
             
     });
     for (var key in groupTXs)
@@ -354,6 +354,26 @@ exports.UpdateTransactionsTableHTML = function()
         $( "#transactions" ).append($("<tr></tr>").append(
             tdCoin, tdStatus, tdDate, tdDescription, tdAmount ));
     }
+    /*for (var i=0; i<arrayTXs.length; i++)
+    {
+        const tx = arrayTXs[i];
+        
+        const tdCoin = $("<td>"+ tx.network+"</td>");
+        const tdStatus = $("<td>" + (tx.transaction.confirmations || 0) + "</td>");
+        const tdDate = $("<td>" + tx.transaction.time_utc + "</td>");
+        const tdDescription = $("<td>" + tx.transaction.tx + "</td>");
+
+        var tdAmountClass = 'success';
+        if (parseFloat(tx.transaction.amount) < 0)
+            tdAmountClass = 'danger';
+            
+        const tdAmount = $("<td class='"+tdAmountClass+"'>"+ parseFloat(tx.transaction.amount).toFixed(8) + "</td>");
+                
+
+        $( "#transactions" ).append($("<tr></tr>").append(
+            tdCoin, tdStatus, tdDate, tdDescription, tdAmount ));
+        
+    }*/
 };
 
 exports.AddKeyPair = function(keyPair, password)
