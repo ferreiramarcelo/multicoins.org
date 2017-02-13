@@ -195,6 +195,11 @@ exports.updateTransactions = function(callback)
 
     for (var key in jsonSavedKeyPairs)
     {
+        if (jsonSavedKeyPairs[key] == undefined ||
+            jsonSavedKeyPairs[key].network == undefined || 
+            coins[jsonSavedKeyPairs[key].network] == undefined || !jsonSavedKeyPairs[key].address || !jsonSavedKeyPairs[jsonSavedKeyPairs[key].address])
+            continue;
+            
         coins[jsonSavedKeyPairs[key].network].push(jsonSavedKeyPairs[key].address);
         jsonSavedKeyPairs[jsonSavedKeyPairs[key].address].txs = [];
     }

@@ -118,14 +118,14 @@ exports.onEditSendToAddressLabel = function(network, address, strLabel, strCoinS
     const body = 
             '<form class="form-horizontal">'+
               '<div class="form-group">'+
-                '<label for="inputEditPublicKey" class="col-sm-2 control-label">Address</label>'+
-                '<div class="col-sm-10">'+
+                '<label for="inputEditPublicKey" class="col-xs-2 control-label">Address</label>'+
+                '<div class="col-xs-10">'+
                   '<input readonly id=\'inputEditPublicKey\' type="text" class="form-control" placeholder="1CHeYxfYo6zVmHSm7B1KztA5f7ZKcMsEWA" size="40">'+
                 '</div>'+
               '</div>'+
               '<div class="form-group">'+
-                '<label for="inputEditPublicKeyLabel" class="col-sm-2 control-label">Label</label>'+
-                '<div class="col-sm-10">'+
+                '<label for="inputEditPublicKeyLabel" class="col-xs-2 control-label">Label</label>'+
+                '<div class="col-xs-10">'+
                   '<input id=\'inputEditPublicKeyLabel\' type="text" class="form-control" placeholder="Multicoin Donate" size="40">'+
                 '</div>'+
               '</div>'+

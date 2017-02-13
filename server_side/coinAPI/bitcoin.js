@@ -48,6 +48,7 @@ function GetUnconfirmedTransactions(arrayAddr, callback)
 
 exports.getTransactions = function(arrayAddr, callback)
 {
+    console.log("getTransactions " + urlAPI  + "txs/" + arrayAddr.toString());
     $.getJSON( urlAPI  + "txs/" + arrayAddr.toString(), function(data) {
         callback(exports.netID, data.data);
         
