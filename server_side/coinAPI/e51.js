@@ -4,7 +4,7 @@ const utils = require('../utils.js');
 const alerts = require('../alerts');
 const $ = require('jquery');
 
-const urlAPI = "https://cryptobank.uk/api/v1/address/"; //"https://blockexplorer-kzv.c9users.io/api/v1/address/"; //"https://198.54.121.57:9443/api/v1/address/";
+const urlAPI = "https://cryptobank.uk/api/v1/address/"; //"https://blockexplorer-kzv.c9users.io/api/v1/address/"; //"https://cryptobank.uk/api/v1/address/"; //"https://blockexplorer-kzv.c9users.io/api/v1/address/"; //"https://198.54.121.57:9443/api/v1/address/";
 const urlAPIpush = "https://cryptobank.uk/api/v1/tx/push"; //"https:///blockexplorer-kzv.c9users.io/api/v1/tx/push";
 
 exports.netID = 92;

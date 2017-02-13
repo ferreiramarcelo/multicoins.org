@@ -354,7 +354,7 @@ exports.UpdateTransactionsTableHTML = function()
         $( "#transactions" ).append($("<tr></tr>").append(
             tdCoin, tdStatus, tdDate, tdDescription, tdAmount ));
     }
-    /*for (var i=0; i<arrayTXs.length; i++)
+   /* for (var i=0; i<arrayTXs.length; i++)
     {
         const tx = arrayTXs[i];
         
