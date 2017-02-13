@@ -6,7 +6,7 @@ exports.handle = function(app)
 {
     app.get('/', function (req, res) {res.render('index.html');});
 
-    app.post('/api/v1/tx/push/ppc', function (req, res) {
+/*    app.post('/api/v1/tx/push/ppc', function (req, res) {
         var strJSON = '{"jsonrpc": "1.0", "id":"curltest", "method": "sendrawtransaction", "params": ["'+req.body.hex+'"] }';
         utils.postString("multicoins.org", 9902, "/", {'Content-Type': 'text/plain', 'Authorization': 'Basic a3p2OnEyMjEw'}, strJSON, function(result) {
             if (result.data)
@@ -34,5 +34,5 @@ exports.handle = function(app)
                         {status: result.success, message: 0, data: result.message || ""};
             res.end(JSON.stringify(ret));
         });
-    });
+    });*/
 };

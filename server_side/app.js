@@ -175,17 +175,17 @@ exports.UpdateKeyPairsTableHTML = function()
                     "Your address info", 
                     "<form><div class='form-group'>"+
                         "<label class='control-label'>Your public address</label>"+
-                        "<div class='row' style='overflow: auto'><div class='col-md-12'>"+
+                        "<div class='row' style='overflow: auto'><div class='col-xs-12'>"+
                             "<p class='form-control-static'>"+address+"</p>"+
                         "</div></div>"+
                     "</div><div class='form-group'>"+
                         "<label class='control-label'>Your compressed public key</label>"+
-                        "<div class='row' style='overflow: auto'><div class='col-md-12'>"+
+                        "<div class='row' style='overflow: auto'><div class='col-xs-12'>"+
                             "<p class='form-control-static'>To get compressed public key please decrypt your wallet</p>"+
                         "</div></div>"+
                     "</div><div class='form-group'>"+
                         "<label class='control-label'>Your uncompressed public key</label>"+
-                        "<div class='row' style='overflow: auto'><div class='col-md-12'>"+
+                        "<div class='row' style='overflow: auto'><div class='col-xs-12'>"+
                             "<p class='form-control-static'>To get uncompressed public key please decrypt your wallet</p>"+
                         "</div></div>"+
                     "</div></form>");
@@ -194,17 +194,17 @@ exports.UpdateKeyPairsTableHTML = function()
                     "Your address info", 
                     "<form><div class='form-group'>"+
                         "<label class='control-label'>Your public address</label>"+
-                        "<div class='row' style='overflow: auto'><div class='col-md-12'>"+
+                        "<div class='row' style='overflow: auto'><div class='col-xs-12'>"+
                             "<p class='form-control-static'>"+address+"</p>"+
                         "</div></div>"+
                     "</div><div class='form-group'>"+
                         "<label class='control-label'>Your compressed public key</label>"+
-                        "<div class='row' style='overflow: auto'><div class='col-md-12'>"+
+                        "<div class='row' style='overflow: auto'><div class='col-xs-12'>"+
                             "<p class='form-control-static'>"+utils.getKeyPairFromWIF(privkey).Q.getEncoded(true).toString('hex')+"</p>"+
                         "</div></div>"+
                     "</div><div class='form-group'>"+
                         "<label class='control-label'>Your uncompressed public key</label>"+
-                        "<div class='row' style='overflow: auto'><div class='col-md-12'>"+
+                        "<div class='row' style='overflow: auto'><div class='col-xs-12'>"+
                             "<p class='form-control-static'>"+utils.getKeyPairFromWIF(privkey).Q.getEncoded(false).toString('hex')+"</p>"+
                         "</div></div>"+
                     "</div></form>");
