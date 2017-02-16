@@ -9,7 +9,7 @@ const urlAPIpush = "https://smailblock.info/api/v1/tx/push"; //"https:///blockex
 
 exports.netID = 63;
 exports.name = "smailcoin";
-exports.Shortname = "SMC";
+exports.Shortname = "SML";
 exports.fee = 0.00001;
 
 exports.getBalance = function(arrayAddr, callback)

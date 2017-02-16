@@ -25,6 +25,9 @@ exports.scryptParams = {
 
 exports.getBIP38 = function(networkID)
 {
+    if (!exports.coinsInfo[networkID] || !exports.coinsInfo[networkID].name)
+        return 0;
+        
     const network = bitcoin.networks[exports.coinsInfo[networkID].name];
         
     var bip38 = new Bip38();
