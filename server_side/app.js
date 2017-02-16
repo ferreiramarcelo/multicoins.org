@@ -102,6 +102,7 @@ exports.UpdateBalanceTable = function()
     var jsonSavedKeyPairs = utils.getItem("KeyPairs").value || {}; 
     const jsonSavedSettings = utils.getItem("Settings").value || {};
     
+    var balance = 0.0;
     $( "#tab_tab_balance" ).html('');
     for (var key in utils.coinsInfo)
     {
@@ -116,6 +117,8 @@ exports.UpdateBalanceTable = function()
         const checked = jsonSavedSettings["filterCoins"][utils.coinsInfo[key].name];
         const tdCoin = $('<td><div class="checkbox"><label><input coin="'+key+'" type="checkbox" value="" '+checked+'>' + utils.coinsInfo[key].name+"</label></div></td>");
         const tdBalance = $('<td><div class="checkbox">' + utils.getSavedBalance(key)+"</div></td>");
+        
+        balance += utils.getSavedBalance(key);
 
         tdCoin[0].onclick = function() {
             var jsonSavedSettingsVar = utils.getItem("Settings").value;
@@ -139,6 +142,8 @@ exports.UpdateBalanceTable = function()
 
         $( "#tab_tab_balance" ).append($("<tr></tr>").append(
             tdCoin, tdBalance ));
+            
+        $("#info_total_balance").text(balance + " SML");
     }
 };
 
@@ -164,7 +169,7 @@ exports.UpdateKeyPairsTableHTML = function()
         //console.log('key='+key+'; address='+address);
         //console.log('jsonSavedKeyPairs[key].network='+jsonSavedKeyPairs[key].network);
         
-        const tdCoin = $('<td>' + utils.coinsInfo[jsonSavedKeyPairs[key].network].name+"</td>");
+        //const tdCoin = $('<td>' + utils.coinsInfo[jsonSavedKeyPairs[key].network].name+"</td>");
         const tdPublic = $('<td><a href="#">'+address+"</a></td>");
         const tdBalance = $('<td>'+jsonSavedKeyPairs[key].balance +"</td>");
         const tdPrivate = $('<td><a href="#">'+jsonSavedKeyPairs[key].private_key+"</a></td>");
@@ -226,7 +231,7 @@ exports.UpdateKeyPairsTableHTML = function()
         const tdDelete = $("<td></td>").append(btnClose);
         
         $( "#keypairs" ).append($("<tr></tr>").append(
-            tdCoin, tdPublic, tdBalance, tdPrivate, tdDelete ));
+            tdPublic, tdBalance, tdPrivate, tdDelete ));
     }
     
     exports.UpdateBalanceTable();
@@ -256,7 +261,7 @@ exports.UpdatePublicKeysTableHTML = function()
         //console.log('jsonSavedPublicKeys[key]='+JSON.stringify(jsonSavedPublicKeys[key]));
         //console.log('jsonSavedPublicKeys[key].network='+JSON.stringify(network));
         
-        const tdCoin = $('<td >' + utils.coinsInfo[network].name + "</td>");
+        //const tdCoin = $('<td >' + utils.coinsInfo[network].name + "</td>");
         const tdPublic = $("<td >"+address+"</td>");
         const tdLabel = $("<td >"+strLabel +"</td>");
         
@@ -283,7 +288,7 @@ exports.UpdatePublicKeysTableHTML = function()
         const tdDelete = $("<td ></td>").append(btnClose);
         
         $( "#addresses_to_send" ).append($("<tr></tr>").append(
-            tdCoin, tdPublic, tdLabel, tdEdit, tdSend, tdDelete ));
+            tdPublic, tdLabel, tdEdit, tdSend, tdDelete ));
     }
 };
 
@@ -339,7 +344,7 @@ exports.UpdateTransactionsTableHTML = function()
     {
         const tx = groupTXs[key];
         
-        const tdCoin = $("<td>"+ tx.network+"</td>");
+       //const tdCoin = $("<td>"+ tx.network+"</td>");
         const tdStatus = $("<td>" + (tx.transaction.confirmations || 0) + "</td>");
         const tdDate = $("<td>" + tx.transaction.time_utc + "</td>");
         const tdDescription = $("<td>" + tx.transaction.tx + "</td>");
@@ -352,7 +357,7 @@ exports.UpdateTransactionsTableHTML = function()
                 
 
         $( "#transactions" ).append($("<tr></tr>").append(
-            tdCoin, tdStatus, tdDate, tdDescription, tdAmount ));
+            tdStatus, tdDate, tdDescription, tdAmount ));
     }
 };
 
