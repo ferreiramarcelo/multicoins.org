@@ -26,7 +26,8 @@ exports.EncodeWallet = function(password)
             
         const bip38 = utils.getBIP38(jsonSavedKeyPairs[keyCurrent].network);
         
-        jsonSavedKeyPairs[keyCurrent].private_key = bip38.encrypt(private_key, hash1, address, function(status){console.log(status.percent)});
+        if (bip38)
+            jsonSavedKeyPairs[keyCurrent].private_key = bip38.encrypt(private_key, hash1, address, function(status){console.log(status.percent)});
     }
     
     utils.setItem("KeyPairs", jsonSavedKeyPairs);
@@ -53,7 +54,8 @@ exports.DecodeWallet = function(password)
         
         const bip38 = utils.getBIP38(jsonSavedKeyPairs[key].network);
         
-        jsonSavedKeyPairs[key].private_key = bip38.decrypt(private_key, hash1);
+        if (bip38)
+            jsonSavedKeyPairs[key].private_key = bip38.decrypt(private_key, hash1);
     }
     
     utils.setItem("KeyPairs", jsonSavedKeyPairs);
