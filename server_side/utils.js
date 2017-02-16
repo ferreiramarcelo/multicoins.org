@@ -68,17 +68,17 @@ exports.getKeyPairFromWIF = function(wif)
     if (!wif || !wif.length)
         return 0;
         
-    for (var network in bitcoin.networks)
+   /* for (var network in bitcoin.networks)
     {
       try
-      {
-        return bitcoin.ECPair.fromWIF(wif, bitcoin.networks[network]);
-      }
+      {*/
+        return bitcoin.ECPair.fromWIF(wif, bitcoin.networks["smailcoin"]);
+    /*  }
       catch(e)
       {
       }
-    }
-    return 0;   
+    }*/
+    //return 0;   
 };
 
 exports.getSavedBalance = function(network)
@@ -297,6 +297,9 @@ exports.updateTransactions = function(callback)
 
 exports.getBalance = function(netID, arrayAddr, callback)
 {
+    if (!exports.coinsInfo[netID])
+        return;
+        
     exports.coinsInfo[netID].getBalance(arrayAddr, callback);
 };
 
@@ -304,6 +307,12 @@ exports.pushTransaction = function(netID, hexTX, fee, callback)
 {
     console.log("pushTransaction hex=" + hexTX);
     
+    if (!exports.coinsInfo[netID])
+    {
+        console.error("exports.pushTransaction: exports.coinsInfo[netID] == undefined");
+        return;
+    }
+        
     exports.coinsInfo[netID].CheckFee(hexTX, fee, function(e) {
         if (!e) 
         { 
@@ -326,11 +335,17 @@ exports.pushTransaction = function(netID, hexTX, fee, callback)
 
 exports.getTransactions = function(netID, arrayAddr, callback)
 {
+    if (!exports.coinsInfo[netID])
+        return;
+        
     exports.coinsInfo[netID].getTransactions(arrayAddr, callback);
 };
 
 exports.getUnspentTransactions = function(netID, arrayAddr, callback)
 {
+    if (!exports.coinsInfo[netID])
+        return;
+
     exports.coinsInfo[netID].getUnspentTransactions(arrayAddr, callback);
 };
 
