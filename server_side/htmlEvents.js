@@ -224,7 +224,7 @@ $('#submitSignMessageVerify').click(function(e) {
     e.preventDefault();
     
     const address = $("#inputPybKeyForSignVerify").val();
-    const addrType = parseInt(utils.get_address_type($('#inputPybKeyForSign').val()), 16);
+    const addrType = parseInt(utils.get_address_type(address), 16);
     const networkName = utils.coinsInfo[addrType].name;
     const network = bitcoin.networks[networkName];
     
