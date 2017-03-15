@@ -137,8 +137,8 @@ exports.UpdateBalanceTable = function()
                 exports.UpdatePublicKeysTableHTML();
         };
 
-        $( "#tab_tab_balance" ).append($("<tr></tr>").append(
-            tdCoin, tdBalance ));
+        $( "#tab_tab_balance" ).append($("<tbody></tbody>").append($("<tr></tr>").append(
+            tdCoin, tdBalance )));
     }
 };
 
