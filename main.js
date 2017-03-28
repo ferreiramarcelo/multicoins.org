@@ -4,10 +4,10 @@ var fs = require('fs');
 var http = require('http');
 var https = require('https');
 
-var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
-var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
+var privateKey  = fs.readFileSync(__dirname + '/sslcert/server.key', 'utf8');
+var certificate = fs.readFileSync(__dirname + '/sslcert/server.crt', 'utf8');
 
-const g_constants = require('./constants');
+const g_constants = require(__dirname + '/constants');
 
 var credentials = {
   key: privateKey, 
