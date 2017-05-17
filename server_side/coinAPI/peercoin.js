@@ -5,8 +5,8 @@ const utils = require('../utils.js');
 const alerts = require('../alerts');
 const $ = require('jquery');
 
-const urlAPI = "https://"+g_constants.my_domain+"/ppc.blockr.io/api/v1/address/";
-const urlAPIpush = "https://"+g_constants.my_domain+"/api/v1/tx/push/ppc";
+const urlAPI = "https://ppc.multicoins.org/api/v1/address/";
+const urlAPIpush = "https://ppc.multicoins.org/api/v1/tx/push";
 
 exports.netID = 0;
 exports.name = "peercoin";

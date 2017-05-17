@@ -6,8 +6,8 @@ const alerts = require('../alerts');
 const $ = require('jquery');
 
 
-const urlAPI = "https://"+g_constants.my_domain+"/btc.blockr.io/api/v1/address/";
-const urlAPIpush = "https://"+g_constants.my_domain+"/btc.blockr.io/api/v1/tx/push";
+const urlAPI = "https://btc.blockr.io/api/v1/address/";
+const urlAPIpush = "https://btc.blockr.io/api/v1/tx/push";
 
 exports.netID = 0;
 exports.name = "bitcoin";
