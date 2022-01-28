@@ -30,7 +30,7 @@
     "express": "^4.13.4",
     "firebase": "^2.4.1",
     "int": "^0.2.0",
-    "jquery": "^2.2.1",
+    "jquery": "^3.6.0",
     "body-parser": "^1.0.0"
   }
 }
