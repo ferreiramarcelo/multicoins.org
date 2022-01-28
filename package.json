@@ -25,7 +25,7 @@
   "dependencies": {
     "bip38": "^1.4.0",
     "multicoinjs-lib": "^1.0.0",
-    "browserify": "^13.0.0",
+    "browserify": "^17.0.0",
     "coininfo": "^0.10.0",
     "express": "^4.13.4",
     "firebase": "^2.4.1",
