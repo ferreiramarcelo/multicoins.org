@@ -24,7 +24,7 @@
   "homepage": "https://github.com/3s3s/multicoins.org#readme",
   "dependencies": {
     "bip38": "^1.4.0",
-    "multicoinjs-lib": "^1.0.0",
+    "multicoinjs-lib": "^5.0.5",
     "browserify": "^13.0.0",
     "coininfo": "^0.10.0",
     "express": "^4.13.4",
